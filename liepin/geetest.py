@@ -110,71 +110,6 @@ def merge_img(img_url):
     return img_path
 
 
-def fake_click_data(position):
-    """
-    根据识别结果伪造点击数据
-    :return:
-    """
-    timestamp = int(time.time() * 1000)
-    left_click_data = [{
-        't': timestamp,
-        'x': random.randint(200, 240),
-        'y': random.randint(160, 180)
-    }]
-    timestamp += random.randint(600000, 900000)
-    move_data = [{
-        't': timestamp,
-        'x': random.randint(0, 10),
-        'y': random.randint(30, 50)
-    }]
-    click_position = [{'x': int(i.split(',')[0]), 'y': int(i.split(',')[1])} for i in position.split('|')]
-    click_data = []
-    for position in click_position:
-        timestamp += random.randint(800, 1500)
-        left_click_data.append({
-            't': timestamp,
-            'x': position['x'],
-            'y': position['y']
-        })
-        click_data.append({
-            't': timestamp,
-            'x': position['x'],
-            'y': position['y']
-        })
-        left_click_data.append({
-            't': timestamp,
-            'x': position['x'],
-            'y': position['y']
-        })
-        timestamp += random.randint(200, 400)
-        move_data.append({
-            't': timestamp,
-            'x': position['x'] + random.randint(-100, 100),
-            'y': position['y'] + random.randint(-100, 100)
-        })
-    start_time = timestamp
-    timestamp += random.randint(800, 1500)
-    left_click_data.append({
-        't': timestamp,
-        'x': position['x'],
-        'y': position['y']
-    })
-    collect_data = {
-        'startTime': start_time,
-        'mousemoveData': move_data,
-        'mouseLeftClickData': left_click_data,
-        'mouseLeftDownData': left_click_data[1:],
-        'mouseLeftUpData': left_click_data[1:],
-        'mouseRightClickData': [],
-        'mouseRightDownData': [],
-        'mouseRightUpData': [],
-        'valuableClickData': click_data,
-        'keydownData': [],
-        'mouseClickMaxCount': 20,
-    }
-    return collect_data
-
-
 def _click_verify(challenge, aes_key, collect_data):
     """
     最终验证
@@ -209,7 +144,7 @@ def click():
         img_data = f.read()
     ok, position = image_to_text(img_data, img_kind=9004)
     if ok:
-        # 伪造点击数据
+        # 伪造点击数据, 已删除, 自行处理, 如有需要, 正当需求, 可邮件联系我
         collect_data = fake_click_data(position)
         # 最终验证
         result = _click_verify(challenge, aes_key, collect_data)
