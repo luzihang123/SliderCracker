@@ -3,7 +3,7 @@
 * 极验2
 
 * 安居客<br>
-    * 轨迹加密: AES CBC 模式, Pkcs7Padding补全。<br>
+    * 轨迹加密: AES CBC 模式, Pkcs7Padding 填充。<br>
     * 问题: 目前安居客已完全变成手势验证。
 
 * 美团
@@ -20,7 +20,7 @@
     * 说明: 验证码图像处理缺口定位成功率有待提高。
     
 * 数美<br>
-    * 轨迹加密: DES CBC模式, ZeroPadding 补全。<br>
+    * 轨迹加密: DES CBC模式, ZeroPadding 填充。<br>
     * 说明: 当接口返回数据中 riskLevel 字段为 PASS 即为验证通过, 在之后的请求中携带 rid 即可。
 
 * 携程<br>
@@ -37,11 +37,11 @@
         * 作用: 提高验证码通过几率。<br>
     
 * 虎牙<br>
-    * 轨迹加密: AES ECB模式, Pkcs7Padding补全。<br>
+    * 轨迹加密: AES ECB模式, Pkcs7Padding 填充。<br>
     * 说明: 滑块通过后台未返回通过签名参数, 后续请求直接使用滑块标识ID code 作为 ticket 即可
    
 * 爱奇艺安全盾<br>
-    * 轨迹加密: AES CBC 模式, Pkcs7Padding补全。(已删除部分关键js, 请自行补全)<br>
+    * 轨迹加密: AES CBC 模式, Pkcs7Padding 填充。(已删除部分关键js, 请自行补全)<br>
     * 加密流程: <br>
         * 1、初始化密钥, 前端与后端约定加解密密钥, 包括 AES 密钥、hMacSHA256 密钥<br>
             * 接口: https://qcaptcha.iqiyi.com/api/outer/sbox/sbox_init_key 。<br>
@@ -65,21 +65,21 @@
         * 处理: python 复写 js 生成正确位置 PIL 切割粘贴还原。
                  
 * 完美世界通行证<br>
-    * 轨迹加密: AES CBC模式, Pkcs7Padding补全。<br>
+    * 轨迹加密: AES CBC模式, Pkcs7Padding 填充。<br>
     * 图像处理: 接口返回还原数组。<br>
         * 前端: js 处理生成 css 插入 html, css 还原<br>
         * 处理: python 复写 js 生成正确位置 PIL 切割粘贴还原。<br>
     * 说明: 轨迹需要重写。
 
 * 螺丝帽点选验证<br>
-    * 轨迹加密: AES CBC 模式, ZeroPadding补全。<br>
+    * 轨迹加密: AES CBC 模式, ZeroPadding 填充。<br>
     * 图像处理: 接口返回还原数组。<br>
         * 前端: js 处理生成 css 插入 html, css 还原。<br>
         * 处理: python 复写 js 生成正确位置 PIL 切割粘贴还原。<br>
     * 说明: 点选定位使用超级鹰打码平台, 请自行更换超级鹰账号密码。
     
 * 猎聘点选验证<br>
-    * 轨迹加密: AES CBC 模式, Pkcs7Padding补全。<br>
+    * 轨迹加密: AES CBC 模式, Pkcs7Padding 填充。<br>
     * 图像处理: js 生成还原数组(固定不变)。<br>
         * 前端: js 处理生成 css 插入 html, css 还原。<br>
         * 处理: execjs 执行 js 生成正确位置 PIL 切割粘贴还原。<br>
