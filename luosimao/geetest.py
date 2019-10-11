@@ -7,6 +7,7 @@
 
 import re
 import json
+import random
 import requests
 import execjs
 from bs4 import BeautifulSoup
@@ -46,7 +47,8 @@ def _init_slider(data_token):
     """
     url = 'https://captcha.luosimao.com/api/request?k=e7b4d20489b69bab25771f9236e2c4be&l=zh-cn'
     env_param = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36||{}||1366:768||win32||webkit".format(data_token)
-    click_param = "138,41:{}||154,33:{}".format(int(round(time.time() * 1000)), int(round(time.time() * 1000)))
+    begin_time = int(time.time() * 1000)
+    click_param = f"{random.randint(100, 150)},{random.randint(0, 30)}:{begin_time}||{random.randint(100, 150)},{random.randint(0, 30)}:{begin_time + random.randint(1, 10)}"
     data = {
         'bg': aes_encrypt("c28725d494c78ad782a6199c341630ee", "2801003954373300", env_param),
         'b': aes_encrypt("c28725d494c78ad782a6199c341630ee", "2801003954373300", click_param)
@@ -142,6 +144,8 @@ def click(init_data, cookies):
         # 最终验证
         position = position.replace('|', '#')
         print(position)
+        # 停顿3到5秒, 模拟人为
+        time.sleep(random.randint(3, 5))
         result = _slider_verify(init_data, position, cookies)
         if isinstance(result, str):
             return {
