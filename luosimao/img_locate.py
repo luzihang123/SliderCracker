@@ -31,6 +31,7 @@ def make_word(text):
     制作描述图片
     :return:
     """
+    text = text.replace('<i>', '').replace('</i>', '')
     # 初始化图片对象, (300, 30)为图片大小, (255, 255, 255) 为白色背景
     img = Image.new('RGB', (300, 30), (255, 255, 255))
     # 设置字体

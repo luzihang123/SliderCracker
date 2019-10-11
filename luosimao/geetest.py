@@ -9,11 +9,15 @@ import re
 import json
 import requests
 import execjs
+from bs4 import BeautifulSoup
 from luosimao import img_locate
+import time
 from luosimao.lsm_crypt import aes_encrypt, md5_encrypt
 from luosimao.chaojiying import image_to_text
 
-headers = {
+
+session = requests.session()
+session.headers = {
     'Content-type': 'application/x-www-form-urlencoded',
     'Origin': 'https://captcha.luosimao.com',
     'Referer': 'https://captcha.luosimao.com/api/widget?k=e7b4d20489b69bab25771f9236e2c4be&l=zh-cn&s=normal&i=_x0lu27ots',
@@ -22,18 +26,33 @@ headers = {
 }
 
 
-def _init_slider():
+def _req_widiget():
+    """
+    初始化环境
+    :return:
+    """
+    url = 'https://captcha.luosimao.com/api/widget?k=e7b4d20489b69bab25771f9236e2c4be&l=zh-cn&s=normal&i=_2ymuhhcry'
+    resp = session.get(url)
+    bsobj = BeautifulSoup(resp.text, 'lxml')
+    data_token = bsobj.select('#l_captcha_widget')[0]['data-token']
+    return data_token
+
+
+def _init_slider(data_token):
     """
     初始化验证码
+    :param data_token:
     :return:
     """
     url = 'https://captcha.luosimao.com/api/request?k=e7b4d20489b69bab25771f9236e2c4be&l=zh-cn'
+    env_param = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36||{}||1366:768||win32||webkit".format(data_token)
+    click_param = "138,41:{}||154,33:{}".format(int(round(time.time() * 1000)), int(round(time.time() * 1000)))
     data = {
-        'bg': 'g2heqaxX6YkuuSgnaqY2ArxuBS8dZmrn9ObmF26IbGDJE/UhMPONsbnkY4Ktxp66n7FtT0DeWQmV7Fjj3v6cguu LTTnrhbiAZmmMOWiMTalzoEBCAwa5beDmHTW/TF0T9M0RI9229Igfen7WZCUHQGiIgaDb1tYjIl2 e4Di1uBZNci8 f3rkyzfHi9jHoJjrrBOb7Afs1Bv6xCBy2oTBGk/Z12DaccOjQe3NYSZj0=',
-        'b': 'ZqglyXxk9fDSFKOsuJAYZWsS0dmPffwJh3XlW6BlyOfp7gaje58uZU9E8ry9xLAZ'
+        'bg': aes_encrypt("c28725d494c78ad782a6199c341630ee", "2801003954373300", env_param),
+        'b': aes_encrypt("c28725d494c78ad782a6199c341630ee", "2801003954373300", click_param)
     }
-
-    resp = requests.post(url, headers=headers, data=data).json()
+    resp = session.post(url, data=data).json()
+    print(resp)
     return resp
 
 
@@ -46,10 +65,10 @@ def get_captcha(s):
     url = 'https://captcha.luosimao.com/api/frame'
     params = {
         's': s,
-        'i': '_nv0uo1kzr',
+        'i': '_2ymuhhcry',
         'l': 'zh-cn'
     }
-    resp = requests.get(url, params=params, headers=headers)
+    resp = session.get(url, params=params)
     captcha_data = re.search('var captchaImage = ({.*?})', resp.text, re.S).group(1)
     captcha_url = re.search(r"p:\['(.*?)',", captcha_data, re.S).group(1)
     merge_array = json.loads(re.search(r'l:(.*?)}', captcha_data).group(1))
@@ -88,7 +107,7 @@ def _slider_verify(init_data, position):
     # }
     data = encrypt_data(init_data, position)
     print(data)
-    result = requests.post(url, data=data, headers=headers).json()
+    result = session.post(url, data=data).json()
     print(result)
     if result['res'] == 'success':
         return result['resp']
@@ -114,6 +133,8 @@ def crack(init_data):
     ok, position = image_to_text(img_data, img_kind=9004)
     if ok:
         # 最终验证
+        position = position.replace('|', '#')
+        print(position)
         result = _slider_verify(init_data, position)
         if isinstance(result, str):
             return {
@@ -140,6 +161,7 @@ def crack(init_data):
 
 
 if __name__ == '__main__':
-    x = _init_slider()
-    y = crack(x)
-    print(y)
+    x = _req_widiget()
+    y = _init_slider(x)
+    z = crack(y)
+    print(z)

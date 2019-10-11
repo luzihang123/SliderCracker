@@ -53,8 +53,8 @@ class ChaojiyingClient(object):
 
 
 def image_to_text(img,
-                  username='******',
-                  password='*******',
+                  username='aaronjny',
+                  password='lezhicom',
                   soft_id='497bc231401f085df56dae7c2e3a9b86',
                   img_kind=1902):
     """
@@ -68,7 +68,6 @@ def image_to_text(img,
     """
     chaojiying = ChaojiyingClient(username, password, soft_id)
     result = chaojiying.PostPic(img, img_kind)
-    print(result)
     if result['err_no'] == 0:
         return True, result['pic_str']
     else:
