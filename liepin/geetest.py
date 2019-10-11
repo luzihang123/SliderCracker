@@ -197,16 +197,21 @@ def _click_verify(challenge, aes_key, collect_data):
 
 
 def click():
+    # 初始化验证码
     init_data = _init_click()
     captcha_url = init_data['captcha_url']
     aes_key = captcha_url[830: 846]
     challenge = init_data['challenge']
+    # 乱序验证码图片还原
     img_path = merge_img(captcha_url)
+    # 超级鹰识别
     with open(img_path, 'rb') as f:
         img_data = f.read()
     ok, position = image_to_text(img_data, img_kind=9004)
     if ok:
+        # 伪造点击数据
         collect_data = fake_click_data(position)
+        # 最终验证
         result = _click_verify(challenge, aes_key, collect_data)
         if result:
             return {
