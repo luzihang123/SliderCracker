@@ -78,6 +78,13 @@
         * 处理: python 复写 js 生成正确位置 PIL 切割粘贴还原。<br>
     * 说明: 点选定位使用超级鹰打码平台, 请自行更换超级鹰账号密码。
     
+* 猎聘点选验证<br>
+    * 轨迹加密: AES CBC 模式, Pkcs7Padding补全。<br>
+    * 图像处理: js 生成还原数组(固定不变)。<br>
+        * 前端: js 处理生成 css 插入 html, css 还原。<br>
+        * 处理: execjs 执行 js 生成正确位置 PIL 切割粘贴还原。<br>
+    * 说明: 点选定位使用超级鹰打码平台, 请自行更换超级鹰账号密码。
+    
 
 环境依赖
 --------
@@ -123,6 +130,10 @@
 
 * 螺丝帽
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/luosimao.png)
+
+* 猎聘
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/liepin.png)
+
 
 公告
 --------
