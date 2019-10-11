@@ -20,7 +20,7 @@ session = requests.session()
 session.headers = {
     'Content-type': 'application/x-www-form-urlencoded',
     'Origin': 'https://captcha.luosimao.com',
-    'Referer': 'https://captcha.luosimao.com/api/widget?k=e7b4d20489b69bab25771f9236e2c4be&l=zh-cn&s=normal&i=_x0lu27ots',
+    'Referer': 'https://my.luosimao.com/',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest'
 }
@@ -51,15 +51,18 @@ def _init_slider(data_token):
         'bg': aes_encrypt("c28725d494c78ad782a6199c341630ee", "2801003954373300", env_param),
         'b': aes_encrypt("c28725d494c78ad782a6199c341630ee", "2801003954373300", click_param)
     }
-    resp = session.post(url, data=data).json()
-    print(resp)
-    return resp
+    # print(data)
+    resp = session.post(url, data=data)
+    print(resp.json())
+    cookies = resp.cookies.get_dict()
+    return resp.json(), cookies
 
 
-def get_captcha(s):
+def get_captcha(s, cookies):
     """
     获取乱序验证码图片和还原数组
     :param s:
+    :param cookies:
     :return:
     """
     url = 'https://captcha.luosimao.com/api/frame'
@@ -68,7 +71,7 @@ def get_captcha(s):
         'i': '_2ymuhhcry',
         'l': 'zh-cn'
     }
-    resp = session.get(url, params=params)
+    resp = session.get(url, params=params, cookies=cookies)
     captcha_data = re.search('var captchaImage = ({.*?})', resp.text, re.S).group(1)
     captcha_url = re.search(r"p:\['(.*?)',", captcha_data, re.S).group(1)
     merge_array = json.loads(re.search(r'l:(.*?)}', captcha_data).group(1))
@@ -88,11 +91,12 @@ def encrypt_data(init_data, position):
     return ctx.call('encrypt', init_data, position)
 
 
-def _slider_verify(init_data, position):
+def _slider_verify(init_data, position, cookies):
     """
     最终验证
     :param init_data: 初始化数据
     :param position: 点选位置
+    :param cookies:
     :return:
     """
     url = 'https://captcha.luosimao.com/api/user_verify'
@@ -100,14 +104,17 @@ def _slider_verify(init_data, position):
     # 参数说明: h: 哈希签名, 给服务器确定使用的验证码图片和密钥;
     #          v: 点选位置加密, 固定偏移量
     #          s: 哈希验签
-    # data = {
-    #     'h': init_data['h'],
-    #     'v': aes_encrypt(init_data['i'], "2801003954373300", position).replace('=', ''),
-    #     's': md5_encrypt(position)
-    # }
-    data = encrypt_data(init_data, position)
+    # python 复写版
+    data = {
+        'h': init_data['h'],
+        'v': aes_encrypt(init_data['i'], "2801003954373300", position).replace('=', '').replace('+', '-').replace('/', '_'),
+        's': md5_encrypt(position)
+    }
     print(data)
-    result = session.post(url, data=data).json()
+    # execjs 执行版
+    data1 = encrypt_data(init_data, position)
+    print(data1)
+    result = session.post(url, data=data, cookies=cookies).json()
     print(result)
     if result['res'] == 'success':
         return result['resp']
@@ -118,9 +125,9 @@ def _slider_verify(init_data, position):
         return None
 
 
-def crack(init_data):
+def click(init_data, cookies):
     # 获取乱序验证码图片和还原位置数组
-    captcha_url, merge_array = get_captcha(init_data['s'])
+    captcha_url, merge_array = get_captcha(init_data['s'], cookies)
     # 还原验证码图片
     captcha_path = img_locate.reduce_image(merge_array, captcha_url)
     # 制作描述图片
@@ -135,7 +142,7 @@ def crack(init_data):
         # 最终验证
         position = position.replace('|', '#')
         print(position)
-        result = _slider_verify(init_data, position)
+        result = _slider_verify(init_data, position, cookies)
         if isinstance(result, str):
             return {
                 'success': 1,
@@ -146,7 +153,7 @@ def crack(init_data):
             }
         elif isinstance(result, dict):
             print('重新加载验证! ')
-            crack(result)
+            click(result, cookies)
         return {
             'success': 0,
             'message': '校验失败! ',
@@ -162,6 +169,6 @@ def crack(init_data):
 
 if __name__ == '__main__':
     x = _req_widiget()
-    y = _init_slider(x)
-    z = crack(y)
+    y, cookies = _init_slider(x)
+    z = click(y, cookies)
     print(z)

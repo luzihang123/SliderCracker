@@ -789,10 +789,11 @@ function encrypt(initData, dots) {
 }
 
 console.log(encrypt({
-    h: "6e5b2f10cf0ca95c9a4af3b68d1b50be",
-    i: "1dec166a16a9fbc3851567cccd6c78b5",
-    n: 1,
-    s: "OAXb3WwBfrEeEd2Oc0diKUvlTs1UzPsUcZYgbdspWNElFORTkjY8gPpBBaLKZ852ddK2Bjeflh-6XKtTGiMRFza1rlOdY5BBHSV05rqGnsPfjxbquKEkhVqXPk9Zvazu7xReyrBL6nji0nDpjOjRY1arvJOUQim2YJcg73PRQYNPdV5jnYOfoNoMeDyxx23bqPYOKgEWSP8b264tQbwk0-KP7JXb1AJBFpvoW41s9N9hbzJJL7w8A8fJ505VGQgvHPD0hPEFMiWEZI7CwJBfm-K4dOuv9QdLgDF50h7i6sxDl537OI6zUx5FzdAiIP61i7LFM79gCFYH7mMRnq-hJlVr8mxYygruFz19bYUlIx-9L0-7VeqmxrASN2jPQ4FUvVAH9CViBnxfF0lAtBaZpkZ4qpvxS1Yia52f5QVbVnHZ9QTiUfEp9rPK9R0JO0q8edk6Vg1-ucDEu-uHr_XBiwD15fVGzVNpPhIguMzDsoGRGrLIoCvLUiQ8fh55rM-ZtPUKvrPxj9qOQ74vpKDAo5rv9lrAcqgaIv5XZGHbvWbgx3a3ngIqPALQ-dpl8hL0HB8DLn8h_RDwAjY3aGmz7w",
+    h: "999c93000323c3d29ef1a05de6cc1aae",
+    i: "21832e61c1b921b503e4e90a64fa5ca9",
+    n: 2,
+    s: "OAXb3WwBfrEdUmUbOxBgb8qCOgIXU6X2mxh-zSAxMMy1eiazUuoEUredkVsvJsvw_evPK10jM-OmRrgXBR8qQ8_6NUqdnb5ycNXoxCaa8fRy2hpYw_6yOkN0EYN2DDo_1CSP3LfEeMwmSlgO1tFs_IYHKSA-huO3Rniqm_FLViKvisdtU3Q84blyKPo-iSRI2gx4PLHHbdvWpE2xaLnohln6Gb0m6qa-ovCJxTK9vrAB_2SV6xCDFMYuB31aRhl0ntT15edsofOiYkalH0SYmSQmZ9gBD_zuwNPbBwgBqEao-wsfSB5L5GJ8okfY2pDbJbODH2o8GJNlaBGe57KV2aOpC-VzUhBHlPzwF6PmWl_6gfho-QV4skHRhRjguTnFSRre-ync4HG7oVquXNXo755UHRvEZaqcDvS6ZEqN8tiZu6jNcMQckBbi2mmURBrHYx5pmZdBGqWWENwrDKKXrcl2OApKF0Qo40ZAsR5cpTHGLgd9WkYZdD1IJXs9gHSlhBoMWAmLZsxEV5VTxrIyj-SjrT10RrQlhDB0mpV44pJNrHawnQUF6dNe79FQYFkDqj48J-2ZGjRuqnZhNC2pWA",
     t: "p",
-    w: "请点击上图中的: <i>圆点</i>"
-}, "67,173"));
+    ts: "DPxXhEwPGS046Zf8_4gxhw",
+    w: "请依次点击上图中的: <i>圆点,星形</i>"
+}, "34,62#70,169"));
