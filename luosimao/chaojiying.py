@@ -53,8 +53,8 @@ class ChaojiyingClient(object):
 
 
 def image_to_text(img,
-                  username='aaronjny',
-                  password='lezhicom',
+                  username='******',
+                  password='********',
                   soft_id='497bc231401f085df56dae7c2e3a9b86',
                   img_kind=1902):
     """
