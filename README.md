@@ -9,11 +9,11 @@
 * 美团
 
 * 京东<br>
-    * 轨迹加密: 自定义算法。<br>
+    * 轨迹加密: 自定义算法: jd_slider.js 。<br>
     * 说明: 轨迹算法需要重写。
     
 * 易盾<br>
-    * 轨迹加密: 自定义算法(删除关键 js, 请自行补全)。
+    * 轨迹加密: 自定义算法: yd_slider.js、generate_fp.js (删除关键 js, 请自行补全, 如有需要, 且是正当需求, 请提issue或者发邮件给我)。
     
 * 云片<br>
     * 轨迹算法: AES 加密轨迹, RSA 加密AES密钥与偏移量传递, 避免密钥泄露。<br>
@@ -24,7 +24,7 @@
     * 说明: 当接口返回数据中 riskLevel 字段为 PASS 即为验证通过, 在之后的请求中携带 rid 即可。
 
 * 携程<br>
-    * 轨迹加密: 固定密钥, 随机偏移量 AES 加密轨迹, md5 加密验签(删除关键js, 请自行补全)。
+    * 轨迹加密: 固定密钥, 随机偏移量 AES 加密轨迹, md5 加密验签(删除关键js, 请自行补全, 如有需要, 且是正当需求, 请提issue或者发邮件给我)。
     
 * 搜狐<br>
     * 轨迹加密: RSA 加密。<br>
@@ -41,7 +41,7 @@
     * 说明: 滑块通过后台未返回通过签名参数, 后续请求直接使用滑块标识ID code 作为 ticket 即可
    
 * 爱奇艺安全盾<br>
-    * 轨迹加密: AES CBC 模式, Pkcs7Padding 填充。(已删除部分关键js, 请自行补全)<br>
+    * 轨迹加密: AES CBC 模式, Pkcs7Padding 填充。(已删除部分关键js, 请自行补全, 如有需要, 且是正当需求, 请提issue或者发邮件给我)<br>
     * 加密流程: <br>
         * 1、初始化密钥, 前端与后端约定加解密密钥, 包括 AES 密钥、hMacSHA256 密钥<br>
             * 接口: https://qcaptcha.iqiyi.com/api/outer/sbox/sbox_init_key 。<br>
@@ -85,8 +85,13 @@
         * 处理: execjs 执行 js 生成正确位置 PIL 切割粘贴还原。<br>
     * 说明:<br> 
         * 点选定位使用超级鹰打码平台, 请自行更换超级鹰账号密码<br>
-        * 鼠标点击移动数据伪造方法已删除, 如有需要, 且是正当需求, 可发邮件给我。
-    
+        * 鼠标点击移动数据伪造方法已删除, 如有需要, 且是正当需求, 请提issue或者发邮件给我。
+
+* 蘑菇街旋转图片朝上验证<br>
+    * 轨迹加密: 自定义加密算法, mgj_encrypt.js、get_auth.js 。<br>
+    * 说明:<br>
+        * 未进行图像识别, 人工手动输入旋转点击图片次数。
+        * 轨迹伪造方法已删除, 请自行编写, 如有需要, 且是正当需求, 请提issue或者发邮件给我。
 
 环境依赖
 --------
@@ -136,6 +141,8 @@
 * 猎聘
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/liepin.png)
 
+* 蘑菇街
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/mogujie.png)
 
 公告
 --------

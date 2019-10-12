@@ -110,6 +110,27 @@ def merge_img(img_url):
     return img_path
 
 
+def fake_click_data(position):
+    """
+    根据识别结果伪造点击数据
+    :return:
+    """
+    collect_data = {
+        'startTime': start_time,
+        'mousemoveData': move_data,
+        'mouseLeftClickData': left_click_data,
+        'mouseLeftDownData': left_click_data[1:],
+        'mouseLeftUpData': left_click_data[1:],
+        'mouseRightClickData': [],
+        'mouseRightDownData': [],
+        'mouseRightUpData': [],
+        'valuableClickData': click_data,
+        'keydownData': [],
+        'mouseClickMaxCount': 20,
+    }
+    return collect_data
+
+
 def _click_verify(challenge, aes_key, collect_data):
     """
     最终验证
