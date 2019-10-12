@@ -31,34 +31,7 @@ def _fake_trace(click_list):
     start_x = random.randint(25, 40)
     start_y = random.randint(30, 45)
     trace = [[-1, -1, -1, 0], [start_x, start_y, int(time.time() * 1000), 1]]
-    click_pisition = [random.randint(40, 120), random.randint(200, 280), random.randint(360, 440),
-                      random.randint(520, 600)]
-    st = [15, 16, 17, 18, 15, 16, 17, 18, 15, 16, 17, 18, 15, 16, 17, 18, 15, 16, 17, 18, 15, 16, 17, 18, 15, 16, 17,
-          18, 15, 16, 17, 18, 15, 16, 17, 18, 15, 16, 17, 18, 14, 16, 17, 18, 16, 17, 18, 19, 20, 17]
-    sy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
-    for index, click_time in enumerate(click_list):
-        v = 0
-        # 当前的位移
-        current = start_x
-        y = start_y
-        while current < click_pisition[index]:
-            # 加速度越小，单位时间的位移越小,模拟的轨迹就越多越详细
-            a = random.randint(10000, 12000)  # 加速运动
-            # 初速度
-            v0 = v
-            t = random.randint(9, 18)
-            s = v0 * t / 1000 + 0.5 * a * ((t / 1000) ** 2)
-            # 当前的位置
-            current += s
-            y += random.choice(sy)
-            # 速度已经达到v,该速度作为下次的初速度
-            v = v0 + a * t / 1000
-            # 添加到轨迹列表
-            if current < click_pisition[index]:
-                trace.append([round(current), y, random.choice(st), 2])
-        for _ in range(int(click_time)):
-            trace.append([click_pisition[index], y, random.randint(200, 400), 1])
+    # 中间已省略
     # 点击完毕后去点击确认键的轨迹, 为了省事直接固定了...
     trace.append([251, 42, 16, 2])
     trace.append([242, 47, 17, 2])
