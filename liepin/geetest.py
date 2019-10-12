@@ -115,6 +115,7 @@ def fake_click_data(position):
     根据识别结果伪造点击数据
     :return:
     """
+    # 轨迹算法已删除, 请自行编写, 可提 issue 或邮件联系我
     collect_data = {
         'startTime': start_time,
         'mousemoveData': move_data,
