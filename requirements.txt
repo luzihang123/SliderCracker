@@ -1,0 +1,5 @@
+pillow=6.0.0
+PyExecjs=1.5.1
+pycryptodemo=3.9.0
+numpy=1.16.2
+opencv-python=4.1.0.25

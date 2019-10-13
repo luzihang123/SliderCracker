@@ -96,11 +96,13 @@
 环境依赖
 --------
 
-* 使用 execjs 执行 js, 安装: pip install PyExecjs 。 
-* python 复写的加密使用的包为 pycryptodemo, 安装: pip install pycryptodemo 。
+* $ pip install -r ./requirements.txt
+
+* 使用 execjs 执行 js。 
+* python 复写的加密使用的包为 pycryptodemo。
 * execjs 执行环境为 node.js。自行下载安装 node.js。
   注意: 安装完毕后, 使用 execjs.get().name 判断运行环境是否已成功切换为 'Node.js(V8)', 若未切换成功, 使用 os.environ["EXECJS_RUNTIME"] = "Node" 切换。
-* 使用 PIL 结合 cv2 进行图像处理识别, 安装: pip install pillow, pip install cv2。
+* 使用 PIL 结合 cv2 进行图像处理识别。
 
 结果展示
 --------
