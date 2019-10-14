@@ -18,7 +18,7 @@ from liepin.chaojiying import image_to_text
 
 
 headers = {
-    'Referer': 'https://passport.liepin.com/account/v1/elogin',
+    'Referer': 'https://passport.liepin.cn/account/v1/elogin',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest'
 }
@@ -44,7 +44,7 @@ def _init_click():
     初始化点选验证码
     :return:
     """
-    url = 'https://passport.liepin.com/verificationcode/v1/clicaptcha.json'
+    url = 'https://passport.liepin.cn/verificationcode/v1/clicaptcha.json'
     data = {
         'scenario': '4'
     }
@@ -115,7 +115,7 @@ def fake_click_data(position):
     根据识别结果伪造点击数据
     :return:
     """
-    # 轨迹算法已删除, 请自行编写, 可提 issue 或邮件联系我
+    # 加密数据格式如下, 具体伪造方法已删除
     collect_data = {
         'startTime': start_time,
         'mousemoveData': move_data,
@@ -140,7 +140,7 @@ def _click_verify(challenge, aes_key, collect_data):
     :param collect_data:
     :return:
     """
-    url = 'https://passport.liepin.com/verificationcode/v1/verifyclicaptcha.json'
+    url = 'https://passport.liepin.cn/verificationcode/v1/verifyclicaptcha.json'
     data = {
         'scenario': '4',
         'challenge': challenge,
