@@ -93,6 +93,14 @@
         * 未进行图像识别, 人工手动输入旋转点击图片次数。
         * 轨迹伪造方法已删除, 请自行编写, 如有需要, 且是正当需求, 请提issue或者发邮件给我。
 
+* 大街注册点选
+    * 点选位置加密: AES ECB模式。<br>
+    * 图像处理: 接口返回加密数据, AES 解密获取还原数组。<br>
+        * 前端: js 处理生成 css 插入 html, css 还原。<br>
+        * 处理: python 复写 js 生成正确位置 PIL 切割粘贴还原。<br>
+    * 说明:<br> 
+        * 点选定位使用超级鹰打码平台, 请自行更换超级鹰账号密码<br> 
+    
 环境依赖
 --------
 
@@ -145,6 +153,10 @@
 
 * 蘑菇街
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/mogujie.png)
+
+* 大街
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/dajie.png)
+
 
 公告
 --------
