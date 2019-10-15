@@ -28,17 +28,9 @@ def _fake_trace(click_list):
     :param click_list: 每张图片点击次数列表
     :return: 在验证码上移动的轨迹
     """
-    start_x = random.randint(25, 40)
-    start_y = random.randint(30, 45)
-    trace = [[-1, -1, -1, 0], [start_x, start_y, int(time.time() * 1000), 1]]
-    # 中间已省略
-    # 点击完毕后去点击确认键的轨迹, 为了省事直接固定了...
-    trace.append([251, 42, 16, 2])
-    trace.append([242, 47, 17, 2])
-    trace.append([233, 55, 17, 2])
-    trace.append([220, 66, 17, 2])
-    trace.append([213, 71, 17, 2])
-    trace.append([208, 75, 16, 2])
+    # 轨迹构造已删除, 请自行编写, 提示: [-1, -1, -1, 0] 开头, 点击位置处停留时间稍长
+    # 轨迹样式:
+    trace = [[-1, -1, -1, 0], [110, 33, 1571136448228, 1], [115, 33, 696, 2], [129, 33, 17, 2], [137, 33, 16, 2], [145, 33, 17, 2]]
     return trace
 
 
@@ -72,10 +64,15 @@ def get_cap_key():
     获取验证码初始化 ID
     :return:
     """
-    url1 = 'https://shieldcaptain.mogu.com/gettoken?auth=d3a700d61718b118edb9982895ba9c9c22bf6898d3e757cbdffa9e56f0b665c3&_={}&callback='.format(
-        int(time.time() * 1000))
+    url = 'https://shieldcaptain.mogu.com/gettoken'
 
-    resp = requests.get(url1, headers=headers)
+    params = {
+        'auth': get_auth({}),
+        '_': int(time.time() * 1000),
+        'callback': ''
+    }
+
+    resp = requests.get(url, params=params, headers=headers)
     try:
         result = json.loads(resp.text.replace('(', '').replace(')', ''))
         cap_key = result['capkey']
@@ -120,8 +117,6 @@ def _input_click():
     x4 = input('请输入第四张图片需要点击几次 >> \n')
     click_times.append(int(x4))
 
-    # 最后需要反转一下, 加密的是翻转的列表
-    click_times = sorted(click_times, reverse=True)
     return click_times
 
 
@@ -135,9 +130,11 @@ def _click_verify(cap_key, click_times):
     url = 'https://shieldcaptain.mogu.com/validate'
 
     trace = _fake_trace(click_times)
+
     data = {
         'probc': cap_key,
-        'probd': encrypt(click_times, cap_key),
+        # 最后需要反转一下, 加密的是翻转的列表
+        'probd': encrypt(click_times[::-1], cap_key),
         'probe': encrypt(trace, cap_key),
         'probf': encrypt([[-1, -1, -1, 0]], cap_key),
         'probg': encrypt([[-1, -1, -1, 0]], cap_key),
