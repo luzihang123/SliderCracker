@@ -71,6 +71,13 @@
         * 处理: python 复写 js 生成正确位置 PIL 切割粘贴还原。<br>
     * 说明: 轨迹需要重写。
 
+* 同盾滑块<br>
+    * 轨迹加密: 目前发现有两套加密, 一套自定义加密, 一套 AES CBC Pkcs7Padding 加密, 加密代码混淆每天自动生成, 轨迹加密隐藏很深, 调试难度大。<br>
+    * 图像处理: 接口返回还原数组加密数据。<br>
+        * 前端: js 解密处理, getImageData() 方法切割乱序验证码, putImageData() 方法绘制正确验证码。<br>
+        * 处理: python 复写 js, PIL 切割粘贴还原。<br>
+    * 说明: 轨迹已删除。
+    
 * 螺丝帽点选验证<br>
     * 轨迹加密: AES CBC 模式, ZeroPadding 填充。<br>
     * 图像处理: 接口返回还原数组。<br>
@@ -104,7 +111,9 @@
 环境依赖
 --------
 
-* $ pip install -r ./requirements.txt
+``` shell script
+$ pip install -r ./requirements.txt
+```
 
 * 使用 execjs 执行 js。 
 * python 复写的加密使用的包为 pycryptodemo。
@@ -144,6 +153,9 @@
 
 * 爱奇艺
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/aiqiyi.png)
+
+* 同盾
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/tongdun.png)
 
 * 螺丝帽
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/luosimao.png)
