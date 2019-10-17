@@ -5,6 +5,7 @@
 # @File    : td_crypt.py
 # @Software: PyCharm
 
+import math
 import execjs
 from Crypto.Cipher import AES
 import base64
@@ -78,24 +79,37 @@ def ft(ctx, text, aes_key):
     return ctx.call('ft', text, aes_key)
 
 
+def int2str(num, b):
+    """
+    将一个整数转化为指定进制字符
+    :param num:
+    :param b:
+    :return:
+    """
+    num = math.ceil(num)
+    return ((num == 0) and "0") or (int2str(num // b, b).lstrip("0") + "0123456789abcdefghijklmnopqrstuvwxyz"[num % b])
+
+
 def encrypt_trace(slide_y, trace, start_time):
     """
-    加密轨迹
+    加密轨迹: 按照特定顺序对轨迹数值转成 36 进制字符串拼接
     :param slide_y: 缺口 y 值
     :param trace: 轨迹
     :param start_time: 验证码刷新时间
     :return:
     """
-    js = """
-    function encrypt(x) {
-        return Math.round(x).toString(36)
-    }
-    """
-    ctx = execjs.compile(js)
-    encrypt = lambda j: ctx.call('encrypt', j) if j != '' else j
+    # 优化: python 复写整数转 36 进制
+    # js = """
+    # function encrypt(x) {
+    #     return Math.round(x).toString(36)
+    # }
+    # """
+    # ctx = execjs.compile(js)
+    # encrypt = lambda j: ctx.call('encrypt', j) if j != '' else j
     # enc_slide = ','.join([encrypt(slide[m]) for m in ["left", "top"]]) + ',' + \
     #             ','.join([encrypt(n) for n in [slide['left'] + slide['width'], slide['top'] + slide['height']]]) + \
     #             ',' + encrypt(trace[-1]['op_x']) + ',' + encrypt(trace[-1]['op_y']) + ',0,0,' + encrypt(start_time)
+    encrypt = lambda j: int2str(j, 36) if j != '' else j
     slide = {'height': 35, 'left': 506.5, 'top': 636.5, 'width': 230}
     enc_slide = ','.join([encrypt(slide[m]) for m in ["left", "top"]]) + ',' + \
                 ','.join([encrypt(n) for n in [slide['left'] + 42, slide['top'] + 40]]) + \
@@ -112,16 +126,7 @@ def encrypt_trace(slide_y, trace, start_time):
 
 
 if __name__ == '__main__':
-    js = """
-        function encrypt(x) {
-        return Math.round(x).toString(36)
-    }
-    """
-    ctx = execjs.compile(js)
-    encrypt = lambda j: ctx.call('encrypt', j) if j != '' else j
-    # enc_slide = ','.join([encrypt(slide[m]) for m in ["left", "top"]]) + ',' + \
-    #             ','.join([encrypt(n) for n in [slide['left'] + slide['width'], slide['top'] + slide['height']]]) + \
-    #             ',' + encrypt(trace[-1]['op_x']) + ',' + encrypt(trace[-1]['op_y']) + ',0,0,' + encrypt(start_time)
+    encrypt = lambda j: int2str(j, 36) if j != '' else j
     slide = {'height': 35, 'left': 506.5, 'top': 636.5, 'width': 230}
     enc_slide = ','.join([encrypt(slide[m]) for m in ["left", "top"]]) + ',' + \
                 ','.join([encrypt(n) for n in [slide['left'] + 42, slide['top'] + 40]]) + \
