@@ -8,6 +8,7 @@
 import json
 import time
 import requests
+from city58.chaojiying import image_to_text
 from city58.img_locate import get_distance
 from city58.c58_crypt import aes_encrypt
 from city58.get_trace import *
@@ -68,17 +69,34 @@ def init_captcha(session_id):
     resp = session.get(url, params=params)
     result = json.loads(resp.text.replace('(', '').replace(')', ''))
     if result['message'] == '成功':
-        return {
-            'captcha_url': result['data']['bgImgUrl'],
-            'slider_url': result['data']['puzzleImgUrl'],
-            'response_id': result['data']['responseId']
-        }
+        if result['data']['level'] == 310:
+            print('触发滑块验证! ')
+            return {
+                'type': 'slide',
+                'captcha_url': result['data']['bgImgUrl'],
+                'slider_url': result['data']['puzzleImgUrl'],
+                'response_id': result['data']['responseId']
+            }
+        elif result['data']['level'] == 320:
+            print('触发点选验证! ')
+            return {
+                'type': 'click',
+                'captcha_url': result['data']['bgImgUrl'],
+                'response_id': result['data']['responseId']
+            }
+        elif result['data']['level'] == 330:
+            print('触发手势验证! ')
+            return {
+                'type': '',
+                'captcha_url': result['data']['bgImgUrl'],
+                'response_id': result['data']['responseId']
+            }
     return None
 
 
-def format_text(token, distance, trace):
+def format_slide_text(token, distance, trace):
     """
-    构造加密字符串
+    构造滑动验证加密字符串
     :param token:
     :param distance:
     :param trace
@@ -92,9 +110,22 @@ def format_text(token, distance, trace):
     }).replace(' ', '')
 
 
-def _slider_verify(response_id, session_id, text):
+def format_click_text(position):
     """
-    滑块验证
+    构造点选验证加密字符串
+    :param position:
+    :return:
+    """
+    return json.dumps({
+        'r': "25",
+        'p': position,
+        'track': '|'.join([p + f',{random.randint(600, 700)}' for p in position.split('|')])
+    }).replace(' ', '')
+
+
+def _captcha_verify(response_id, session_id, text):
+    """
+    最终验证
     :param response_id:
     :param session_id:
     :param text:
@@ -115,24 +146,44 @@ def _slider_verify(response_id, session_id, text):
     return None
 
 
-def crack():
+def main():
     # 获取 session_id
     session_id = get_session()
     # 获取 token 签名
     token = get_token()
     # 初始化验证码
     init_data = init_captcha(session_id)
-    # 获取缺口距离
-    distance = get_distance(init_data['slider_url'], init_data['captcha_url'])
-    # 屏幕图片尺寸比
-    distance = round(distance * (280 / 480))
-    # 伪造轨迹
-    trace = generate_trace(distance)
-    new_trace = process_trace(trace)
-    # 构造加密字符串
-    text = format_text(token, distance, new_trace)
+    if init_data['type'] == 'slide':
+        # 获取缺口距离
+        distance = get_distance(init_data['slider_url'], init_data['captcha_url'])
+        # 屏幕图片尺寸比
+        distance = round(distance * (280 / 480))
+        # 伪造轨迹
+        trace = generate_trace(distance)
+        new_trace = process_trace(trace)
+        # 构造加密字符串
+        text = format_slide_text(token, distance, new_trace)
+    elif init_data['type'] == 'click':
+        # 超级鹰识别点选位置
+        img_data = session.get('https://verifycode.58.com' + init_data['captcha_url']).content
+        ok, position = image_to_text(img_data)
+        if ok:
+            # 构造加密字符串
+            text = format_click_text(position)
+        else:
+            return {
+                'success': 0,
+                'message': '点选验证位置识别失败! ',
+                'data': None
+            }
+    else:
+        return {
+            'success': 0,
+            'message': '暂未实现的破解类型! ',
+            'data': None
+        }
     # 最终验证
-    result = _slider_verify(init_data['response_id'], session_id, text)
+    result = _captcha_verify(init_data['response_id'], session_id, text)
     if result:
         return {
             'success': 1,
@@ -149,5 +200,5 @@ def crack():
 
 
 if __name__ == '__main__':
-    x = crack()
+    x = main()
     print(x)
