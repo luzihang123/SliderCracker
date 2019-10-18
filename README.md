@@ -6,6 +6,10 @@
     * 轨迹加密: AES CBC 模式, Pkcs7Padding 填充。<br>
     * 问题: 目前安居客已完全变成手势验证。
 
+* 58同城<br>
+    * 轨迹加密: AES CBC 模式, Pkcs7Padding 填充。<br>
+    * 说明: 轨迹收集自网上, 自写的轨迹通过率不高, 仅作参考。
+
 * 美团
 
 * 京东<br>
@@ -129,6 +133,9 @@ $ pip install -r ./requirements.txt
 
 * 安居客
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/anjuke.png)
+
+* 58同城
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/58city.png)
 
 * 美团
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/meituan.png)
