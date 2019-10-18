@@ -126,12 +126,9 @@ def crack():
     distance = get_distance(init_data['slider_url'], init_data['captcha_url'])
     # 屏幕图片尺寸比
     distance = round(distance * (280 / 480))
-    # 获取库存轨迹
-    distance, new_trace = get_track(distance)
-    if not new_trace:
-        print('无库存轨迹, 自行伪造! ')
-        trace = generate_trace(distance)
-        new_trace = process_trace(trace)
+    # 伪造轨迹
+    trace = generate_trace(distance)
+    new_trace = process_trace(trace)
     # 构造加密字符串
     text = format_text(token, distance, new_trace)
     # 最终验证
