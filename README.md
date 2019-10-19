@@ -6,6 +6,10 @@
         * 使用超级鹰打码平台识别手势, 返回四个坐标点, 根据坐标点绘制轨迹, 自行更换超级鹰用户名密码。<br>
         * 轨迹来源: [点击这里](https://github.com/clllanqing/solve_captcha/blob/master/wuba/utils.py), 通过率不高, 自行改写。
 
+* 今日头条
+    * 轨迹加密: 无, 明文传输。
+    * 说明: 轨迹已删除, 校验不严格, 匀加速即可。
+
 * 极验2
 
 * 安居客<br>
@@ -140,6 +144,9 @@ $ pip install -r ./requirements.txt
 
 * Vaptcha
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/vaptcha.png)
+
+* 今日头条
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/toutiao.png)
 
 * 极验2
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/geetest2.png)
