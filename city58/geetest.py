@@ -9,7 +9,7 @@ import json
 import time
 import requests
 from city58.chaojiying import image_to_text
-from city58.img_locate import get_distance
+from city58.img_locate import get_distance, process_img
 from city58.c58_crypt import aes_encrypt
 from city58.get_trace import *
 
@@ -87,7 +87,7 @@ def init_captcha(session_id):
         elif result['data']['level'] == 330:
             print('触发手势验证! ')
             return {
-                'type': '',
+                'type': 'gesture',
                 'captcha_url': result['data']['bgImgUrl'],
                 'response_id': result['data']['responseId']
             }
@@ -159,13 +159,15 @@ def main():
         # 屏幕图片尺寸比
         distance = round(distance * (280 / 480))
         # 伪造轨迹
-        trace = generate_trace(distance)
+        trace = generate_slide_trace(distance)
         new_trace = process_trace(trace)
         # 构造加密字符串
         text = format_slide_text(token, distance, new_trace)
     elif init_data['type'] == 'click':
+        # 下载验证码并重置尺寸
+        captcha_url = 'https://verifycode.58.com' + init_data['captcha_url']
+        img_data = process_img(captcha_url, init_data['type'])
         # 超级鹰识别点选位置
-        img_data = session.get('https://verifycode.58.com' + init_data['captcha_url']).content
         ok, position = image_to_text(img_data)
         if ok:
             # 构造加密字符串
@@ -176,10 +178,28 @@ def main():
                 'message': '点选验证位置识别失败! ',
                 'data': None
             }
+    elif init_data['type'] == 'gesture':
+        # 下载验证码并重置尺寸
+        captcha_url = 'https://verifycode.58.com' + init_data['captcha_url']
+        img_data = process_img(captcha_url, init_data['type'])
+        # 超级鹰识别点选位置
+        ok, position = image_to_text(img_data)
+        if ok:
+            position = [i for i in position.split('|')]
+            # 伪造轨迹
+            distance, trace = generate_gesture_trace(position)
+            # 构造加密字符串
+            text = format_slide_text(token, distance, trace)
+        else:
+            return {
+                'success': 0,
+                'message': '手势验证轮廓识别失败! ',
+                'data': None
+            }
     else:
         return {
             'success': 0,
-            'message': '暂未实现的破解类型! ',
+            'message': '未知验证类型! ',
             'data': None
         }
     # 最终验证

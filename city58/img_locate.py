@@ -70,3 +70,16 @@ def get_distance(slider_url, captcha_url):
     return int(round(y))
 
 
+def process_img(captcha_url, type):
+    """
+    下载验证码图片并重置尺寸
+    :param captcha_url: 验证码图片
+    :param type: 验证码类型
+    :return:
+    """
+    img_path = _pic_download(captcha_url, type)
+    img = Image.open(img_path).resize((280, 158))
+    img.save(img_path)
+    with open(img_path, 'rb') as f:
+        img_data = f.read()
+    return img_data
