@@ -133,7 +133,16 @@ def generate_slide_trace(distance):
     :param distance: 缺口距离
     :return:
     """
-    # 滑块轨迹已删除, 请自行编写
+    # 删除滑块轨迹, 请自行编写
+    for index, x in enumerate(tracks_list):
+        trace.append({
+            'p': ','.join([str(x + start_x), str(y_list[index] + start_y)]),
+            't': timestamp_list[index]
+        })
+    trace.append({
+        'p': f'{tracks_list[-1] + start_x},{y_list[-1] + start_y}',
+        't': timestamp_list[-1] + random.randint(100, 300)
+    })
     return trace
 
 
