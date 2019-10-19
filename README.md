@@ -4,7 +4,7 @@
     * 轨迹加密: 自定义加密。<br>
     * 说明: 
         * 使用超级鹰打码平台识别手势, 返回四个坐标点, 根据坐标点绘制轨迹, 自行更换超级鹰用户名密码。
-        * 轨迹来源: [点击这里](https://github.com/clllanqing/solve_captcha), 通过率不高, 自行改写
+        * 轨迹来源: [点击这里](https://github.com/clllanqing/solve_captcha/blob/master/wuba/utils.py), 通过率不高, 自行改写。
 
 * 极验2
 
