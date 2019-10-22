@@ -125,6 +125,12 @@
         * 处理: python 复写 js 生成正确位置 PIL 切割粘贴还原。<br>
     * 说明:<br> 
         * 点选定位使用超级鹰打码平台, 请自行更换超级鹰账号密码<br> 
+
+* 巨人网络
+    * 说明: 无轨迹校验, 缺口距离校验为 base64 编码。
+
+* 喜马拉雅
+    * 说明: 无轨迹校验, 缺口距离校验为 js 处理。
     
 环境依赖
 --------
@@ -195,6 +201,12 @@ $ pip install -r ./requirements.txt
 
 * 大街
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/dajie.png)
+
+* 巨人网络
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/ztggame.png)
+
+* 喜马拉雅
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/xmly.png)
 
 
 公告
