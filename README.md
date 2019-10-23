@@ -131,6 +131,11 @@
 
 * 喜马拉雅
     * 说明: 无轨迹校验, 缺口距离校验为 js 处理。
+
+* 云闪付
+    * 轨迹加密: 自定义算法, ysf_slider.js。
+    * 说明: 缺口距离获取不准确。
+    
     
 环境依赖
 --------
@@ -207,6 +212,9 @@ $ pip install -r ./requirements.txt
 
 * 喜马拉雅
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/xmly.png)
+
+* 云闪付
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/yunshanfu.png)
 
 
 公告
