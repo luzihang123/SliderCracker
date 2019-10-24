@@ -163,7 +163,47 @@ def _generate_trace(distance):
     :param distance:
     :return:
     """
-    # 轨迹删除
+    # 初速度
+    v = 0
+    # 位移/轨迹列表，列表内的一个元素代表0.02s的位移
+    tracks_list = []
+    # 当前的位移
+    current = 0
+    while current < distance - 3:
+        # 加速度越小，单位时间的位移越小,模拟的轨迹就越多越详细
+        a = random.randint(10000, 12000)  # 加速运动
+        # 初速度
+        v0 = v
+        t = random.randint(9, 18)
+        s = v0 * t / 1000 + 0.5 * a * ((t / 1000) ** 2)
+        # 当前的位置
+        current += s
+        # 速度已经达到v,该速度作为下次的初速度
+        v = v0 + a * t / 1000
+        # 添加到轨迹列表
+        if current < distance:
+            tracks_list.append(round(current))
+    # 减速慢慢滑
+    if round(current) < distance:
+        for i in range(round(current) + 1, distance + 1):
+            tracks_list.append(i)
+    else:
+        for i in range(tracks_list[-1] + 1, distance + 1):
+            tracks_list.append(i)
+    y_list = []
+    zy = 0
+    for j in range(len(tracks_list)):
+        y = random.choice(
+            [0, 0, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+             -1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0])
+        zy += y
+        y_list.append(zy)
+        j += 1
+    base_y = str(-random.randint(330, 350))
+    trace = [['0', base_y], ['0', base_y], ['0', base_y]]
+    for index, x in enumerate(tracks_list):
+        trace.append([str(x), str(y_list[index])])
+    t_last = trace[-1]
     for _ in range(random.randint(4, 6)):
         trace.append(t_last)
     return trace

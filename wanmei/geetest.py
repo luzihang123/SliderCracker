@@ -103,6 +103,7 @@ def _slider_verify(cap_ticket, cap_key, validate, op):
     }
     resp = session.get(url, params=params)
     result = json.loads(resp.text.replace('(', '').replace(')', ''))
+    print(result)
     if result['code'] == 0:
         return {
             'success': 1,
