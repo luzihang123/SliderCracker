@@ -1,3 +1,40 @@
+// 删除关键 js, 请自行补全
+
+
+function uuid(e, t) {
+    var n = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split("")
+        , a = []
+        , i = void 0;
+    if (t = t || n.length,
+        e)
+        for (i = 0; i < e; i++)
+            a[i] = n[0 | Math.random() * t];
+    else {
+        var r = void 0;
+        for (a[8] = a[13] = a[18] = a[23] = "-",
+                 a[14] = "4",
+                 i = 0; i < 36; i++)
+            a[i] || (r = 0 | 16 * Math.random(),
+                a[i] = n[19 === i ? 3 & r | 8 : r])
+    }
+    return a.join("")
+}
+
+function get_cb() {
+    var e = uuid(32);
+    return t.eypt(e)
+}
+
+function b_sample(e, t) {
+    var n = e.length;
+    if (n <= t)
+        return e;
+    for (var i = [], r = 0, o = 0; o < n; o++)
+        o >= r * (n - 1) / (t - 1) && (i.push(e[o]),
+            r += 1);
+    return i
+}
+
 function process_trace(token, trace) {
     var new_trace = new Array();
     for (var i_index = 0 ;i_index < trace.length; i_index++) {
