@@ -64,7 +64,10 @@ def _pic_download(url, type):
     :param type:
     :return:
     """
-    img_path = os.path.abspath('...') + '\\' + '{}.jpg'.format(type)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
     img_data = base64.b64decode(url)
     with open(img_path, 'wb') as f:
         f.write(img_data)
@@ -97,6 +100,11 @@ def merge_img(img_url):
     """
     ctx = execjs.compile(js)
     merge_array = ctx.call('get_merge_array')
+
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
     img_path = _pic_download(img_url, 'captcha')
     img = Image.open(img_path)
     new_image = Image.new('RGB', img.size)
@@ -104,8 +112,8 @@ def merge_img(img_url):
     for i in merge_array:
         imgcrop = img.crop((i[0][0], i[0][1], i[0][0] + 16, i[0][1] + 100))
         new_image.paste(imgcrop, (i[1][0], i[1][1]))
-    new_image.show()
-    img_path = os.path.abspath('...') + '\\' + 'new_captcha.jpg'
+    # new_image.show()
+    img_path = save_path + '\\' + 'new_captcha.jpg'
     new_image.save(img_path)
     return img_path
 
@@ -115,7 +123,12 @@ def fake_click_data(position):
     根据识别结果伪造点击数据
     :return:
     """
-    # 加密数据格式如下, 具体伪造方法已删除
+    # 轨迹删除
+    left_click_data.append({
+        't': timestamp,
+        'x': position['x'],
+        'y': position['y']
+    })
     collect_data = {
         'startTime': start_time,
         'mousemoveData': move_data,

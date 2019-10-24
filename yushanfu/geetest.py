@@ -66,7 +66,11 @@ def _pic_download(cap_id, type):
     :param type:
     :return:
     """
-    img_path = os.path.abspath('...') + '\\' + '{}.jpg'.format(type)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
     img_data = requests.get(f'https://captcha.95516.com/media?mediaId={"m" if type == "captcha" else "s"}{cap_id}.png').content
     with open(img_path, 'wb') as f:
         f.write(img_data)
@@ -89,7 +93,7 @@ def _cut_slider(path):
                 y.append(j)
     z = (np.min(x), np.min(y), np.max(x), np.max(y))
     result = image.crop(z)
-    result.convert('RGB').save('targ.jpg')
+    result.convert('RGB').save(path)
     # result.show()
     return result.size[0], result.size[1]
 
@@ -100,6 +104,10 @@ def get_distance(cap_id):
     :param cap_id:
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
     # 引用上面的图片下载
     slider_path = _pic_download(cap_id, 'slider')
 
@@ -109,8 +117,8 @@ def get_distance(cap_id):
     # 计算拼图还原距离
     target = cv2.imread(slider_path, 0)
     template = cv2.imread(captcha_path, 0)
-    temp = 'temp.jpg'
-    targ = 'targ.jpg'
+    temp = save_path + '\\' + 'temp.jpg'
+    targ = save_path + '\\' + 'targ.jpg'
     cv2.imwrite(targ, target)
     w, h = _cut_slider(slider_path)
     cv2.imwrite(temp, template)
@@ -130,7 +138,7 @@ def get_distance(cap_id):
     # 切割
     imagecrop = image.crop(xy)
     # 保存切割的缺口
-    imagecrop.save("new_image.jpg")
+    imagecrop.save(save_path + '\\' + "new_image.jpg")
     imagecrop.show()
     return int(round(y))
 
@@ -141,48 +149,7 @@ def _generate_trace(distance):
     :param distance:
     :return:
     """
-    # 初速度
-    v = 0
-    # 位移/轨迹列表，列表内的一个元素代表0.02s的位移
-    tracks_list = []
-    # 当前的位移
-    current = 0
-    while current < distance - 13:
-        # 加速度越小，单位时间的位移越小,模拟的轨迹就越多越详细
-        a = random.randint(10000, 12000)  # 加速运动
-        # 初速度
-        v0 = v
-        t = random.randint(9, 18)
-        s = v0 * t / 1000 + 0.5 * a * ((t / 1000) ** 2)
-        # 当前的位置
-        current += s
-        # 速度已经达到v,该速度作为下次的初速度
-        v = v0 + a * t / 1000
-        # 添加到轨迹列表
-        if current < distance:
-            tracks_list.append(round(current))
-    # 减速慢慢滑
-    if round(current) < distance:
-        for i in range(round(current) + 1, distance + 1):
-            tracks_list.append(i)
-    else:
-        for i in range(tracks_list[-1] + 1, distance + 1):
-            tracks_list.append(i)
-    # 生成时间戳列表
-    timestamp_list = []
-    timestamp = 0
-    for i in range(len(tracks_list)):
-        t = random.choice([7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8])
-        timestamp += t
-        timestamp_list.append(timestamp)
-        i += 1
-    y_list = []
-    zy = 0
-    for j in range(len(tracks_list)):
-        y = random.choice([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0])
-        zy += y
-        y_list.append(zy)
-        j += 1
+    # 轨迹删除
     trace = [[-random.randint(0, 20), -random.randint(70, 85), 0], [0, 0, 0], [0, 0, 0]]
     for index, x in enumerate(tracks_list[:-1]):
         trace.append([x, y_list[index], timestamp_list[index]])

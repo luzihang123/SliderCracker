@@ -8,222 +8,122 @@
 
 import requests
 import json
-import base64
-import io
 import execjs
 import re
-import time
-import cv2
-from PIL import Image
-import random
-import numpy as np
+from jingdong.img_locate import get_distance
+from jingdong.get_trace import *
 
 
-def pic_download(url, type):
-    img_data = base64.b64decode(url)
-    current_img = Image.open(io.BytesIO(img_data)).convert("RGB")
-    current_img.save('./{}.jpg'.format(type))
+session = requests.Session()
+session.headers = {
+    'Connection': 'keep-alive',
+    'Referer': 'https://passport.jd.com/new/login.aspx?ReturnUrl=https%3A%2F%2Fh5.m.jd.com%2Fpc%2Fdev%2F3mr2iWXgiWcZvyGYrQAoYp3KXAaq%2Findex.html%3Futm_source%3Dkong%26utm_medium%3Dzssc%26utm_campaign%3Dt_1000023384_100757%26utm_term%3D36f20e86-5b4d-4b6e-8fba-d79e6c2654a9-p_1999-pr_1646-at_100757%26jd_pop%3D36f20e86-5b4d-4b6e-8fba-d79e6c2654a9%26abt%3D0',
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36"
+}
 
 
-def get_distance(small_url, big_url):
-    # 引用上面的图片下载
-    pic_download(small_url, 'slider')
-
-    # 引用上面的图片下载
-    pic_download(big_url, 'captcha')
-
-    # # 计算拼图还原距离
-    target = cv2.imread('slider.jpg', 0)
-    template = cv2.imread('captcha.jpg', 0)
-    w, h = target.shape[::-1]
-    temp = 'temp.jpg'
-    targ = 'targ.jpg'
-    cv2.imwrite(temp, template)
-    cv2.imwrite(targ, target)
-    target = cv2.imread(targ)
-    target = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY)
-    target = abs(255 - target)
-    cv2.imwrite(targ, target)
-    target = cv2.imread(targ)
-    template = cv2.imread(temp)
-    result = cv2.matchTemplate(target, template, cv2.TM_CCOEFF_NORMED)
-    x, y = np.unravel_index(result.argmax(), result.shape)
-    # 缺口位置
-    # print((y, x, y + w, x + h))
-
-    # 调用PIL Image 做测试
-    image = Image.open('captcha.jpg')
-
-    xy = (y, x, y + w, x + h)
-    # 切割
-    imagecrop = image.crop(xy)
-    # 保存切割的缺口
-    imagecrop.save("new_image.jpg")
-    imagecrop.show()
-    return y
-
-
-def get_trace(distance):
+def get_session_id():
     """
-    生成轨迹
-    :param distance:
+    获取设备指纹 _jdtdmap_sessionId
     :return:
     """
-    back = random.randint(2, 6)
-    distance += back
-
-    base_x = 851
-    base_y = 342
-    # 初速度
-    v = 0
-    # 位移/轨迹列表，列表内的一个元素代表0.02s的位移
-    tracks_list = []
-    # 当前的位移
-    current = 0
-    while current < distance - 13:
-        # 加速度越小，单位时间的位移越小,模拟的轨迹就越多越详细
-        a = random.randint(10000, 12000)  # 加速运动
-        # 初速度
-        v0 = v
-        t = random.randint(9, 18)
-        s = v0 * t / 1000 + 0.5 * a * ((t / 1000) ** 2)
-        # 当前的位置
-        current += s
-        # 速度已经达到v,该速度作为下次的初速度
-        v = v0 + a * t / 1000
-        # 添加到轨迹列表
-        if current < distance:
-            tracks_list.append(round(current))
-    # 减速慢慢滑
-    if round(current) < distance:
-        for i in range(round(current) + 1, distance + 1):
-            tracks_list.append(i)
-    else:
-        for i in range(tracks_list[-1] + 1, distance + 1):
-            tracks_list.append(i)
-    # 回退
-    for _ in range(back):
-        current -= 1
-        tracks_list.append(round(current))
-    tracks_list.append(round(current) - 1)
-    if tracks_list[-1] != distance - back:
-        tracks_list.append(distance - back)
-    # 生成时间戳列表
-    timestamp = int(time.time() * 1000)
-    timestamp_list = [timestamp]
-    time.sleep(random.uniform(0.5, 1.5))
-    for i in range(1, len(tracks_list)):
-        t = random.randint(11, 18)
-        timestamp += t
-        timestamp_list.append(timestamp)
-        i += 1
-    y_list = []
-    for j in range(len(tracks_list)):
-        y = random.choice([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0])
-        y_list.append(y)
-        j += 1
-    trace = [[str(base_x), str(base_y), timestamp_list[0]]]
-    x_offset = random.randint(20, 40)
-    y_offset = random.randint(20, 40)
-    for index, x in enumerate(tracks_list):
-        trace.append([str(base_x + x_offset + x), str(base_y + y_offset + y_list[index]), timestamp_list[index]])
-    return trace
+    response = session.get("https://seq.jd.com/jseqf.html?bizId=passport_jd_com_login_pc&platform=js&version=1")
+    session_id = re.findall(r'_jdtdmap_sessionId="(.*?)"', response.text)[0]
+    return session_id
 
 
-class JDCracker:
-    def __init__(self, eid):
-        self.eid = eid
-        self.session = requests.Session()
-        self.session.headers = {
-            'Connection': 'keep-alive',
-            'Referer': 'https://passport.jd.com/new/login.aspx?ReturnUrl=https%3A%2F%2Fh5.m.jd.com%2Fpc%2Fdev%2F3mr2iWXgiWcZvyGYrQAoYp3KXAaq%2Findex.html%3Futm_source%3Dkong%26utm_medium%3Dzssc%26utm_campaign%3Dt_1000023384_100757%26utm_term%3D36f20e86-5b4d-4b6e-8fba-d79e6c2654a9-p_1999-pr_1646-at_100757%26jd_pop%3D36f20e86-5b4d-4b6e-8fba-d79e6c2654a9%26abt%3D0',
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36"
-        }
+def _init_slider():
+    """
+    初始化滑块
+    :return:
+    """
+    url = 'https://iv.jd.com/slide/g.html'
+    params = {
+        'appId': '1604ebb2287',
+        'scene': 'login',
+        'product': 'click-bind-suspend',
+        'e': 'Q2NDKJBVGRE5UMX3OJJRO6BV6UVQBMIFTJ3D2UJKVYHJMWPOMZYIUY43WWNWPEKLNC6UL62ABWCUBISUNMCQBEQUUQ',
+        'lang': 'zh_CN',
+        'callback': ''
+    }
+    resp = session.get(url, params=params)
+    init_data = json.loads(resp.text.replace("(", "").replace(")", ""))
+    return init_data
 
-    def _init_slider(self):
-        """
-        初始化滑块
-        :return:
-        """
-        response = self.session.get(
-            "https://iv.jd.com/slide/g.html?appId=1604ebb2287&scene=login&"
-            "product=click-bind-suspend&e=%s&callback=jsonp_0682216393529359" % self.eid
-        )
-        init_data = json.loads(response.text.replace("jsonp_0682216393529359(", "").replace(")", ""))
-        return init_data
 
-    @staticmethod
-    def _encrypt_trace(trace):
-        """
-        加密轨迹, 生成参数 d
-        :return:
-        """
-        with open('jd_slider.js', 'r') as f:
-            js = f.read()
+def _encrypt_trace(trace):
+    """
+    加密轨迹, 生成参数 d
+    :return:
+    """
+    with open('jd_slider.js', 'r') as f:
+        js = f.read()
 
-        ctx = execjs.compile(js)
-        return ctx.call('encrypt_trace', trace)
+    ctx = execjs.compile(js)
+    return ctx.call('encrypt_trace', trace)
 
-    def get_session_id(self):
-        """
-        获取 _jdtdmap_sessionId
-        :return:
-        """
-        response = self.session.get(
-            "https://seq.jd.com/jseqf.html?bizId=passport_jd_com_login_pc&platform=js&version=1"
-        )
-        _jdtdmap_sessionId = re.findall(r'_jdtdmap_sessionId="(.*?)"', response.text)[0]
-        return _jdtdmap_sessionId
 
-    def crack(self):
-        init_data = self._init_slider()
+def _slider_verify(d, challenge, session_id):
+    """
+    滑块验证
+    :param d: 加密轨迹
+    :param challenge: 验证码签名
+    :param session_id: 设备指纹
+    :return:
+    """
+    url = "https://iv.jd.com/slide/s.html?"
+    params = {
+        "d": d,
+        "c": challenge,
+        "w": 278,
+        "appId": "1604ebb2287",
+        "scene": "login",
+        "product": "click-bind-suspend",
+        "e": 'Q2NDKJBVGRE5UMX3OJJRO6BV6UVQBMIFTJ3D2UJKVYHJMWPOMZYIUY43WWNWPEKLNC6UL62ABWCUBISUNMCQBEQUUQ',
+        "s": session_id,
+        "o": 'xxx',  # 账号
+        "lang": 'zh_CN',
+        "callback": ''
+    }
+    response = session.get(url, params=params)
+    result = json.loads(response.text.replace("(", "").replace(")", ""))
+    print(result)
+    return result
 
-        bg = init_data['bg']
-        small = init_data['patch']
-        distance = int(get_distance(small, bg) * (278 / 360))
 
-        if not distance:
-            print("缺口定位失败")
-            return
-
-        _jdtdmap_sessionId = self.get_session_id()
-
-        trace = get_trace(distance)
-        d = self._encrypt_trace(trace)
-
-        url = "https://iv.jd.com/slide/s.html?"
-        params = {
-            "d": d,
-            "c": init_data["challenge"],
-            "w": 278,
-            "appId": "1604ebb2287",
-            "scene": "login",
-            "product": "click-bind-suspend",
-            "e": self.eid,
-            "s": _jdtdmap_sessionId,
-            "o": 'xxx',
-            "lang": 'zh_CN',
-            "callback": "jsonp_042151781690389"
-        }
-        response = self.session.get(url, params=params)
-        result = json.loads(response.text.replace("jsonp_042151781690389(", "").replace(")", ""))
-        print(result)
-        if "validate" not in result.keys():
-            return {
-                'success': 0,
-                'message': '校验失败: {}'.format(result["message"]),
-                'data': None
-            }
+def crack():
+    # 获取设备指纹
+    session_id = get_session_id()
+    # 初始化滑块
+    init_data = _init_slider()
+    # 获取缺口距离
+    distance = get_distance(init_data['patch'], init_data['bg'])
+    # 屏幕图片尺寸比
+    distance = round(distance * (278 / 360))
+    # print(distance)
+    # 伪造轨迹
+    trace = get_trace(distance)
+    # trace = generate_trace(distance)
+    # print(trace)
+    d = _encrypt_trace(trace)
+    time.sleep(2)
+    result = _slider_verify(d, init_data['challenge'], session_id)
+    if "validate" not in result.keys():
         return {
-            'success': 1,
-            'message': '校验成功! ',
-            'data': {
-                "validate": result["validate"],
-                "challenge": init_data["challenge"],
-            }
+            'success': 0,
+            'message': '校验失败: {}'.format(result["message"]),
+            'data': None
         }
+    return {
+        'success': 1,
+        'message': '校验成功! ',
+        'data': {
+            "validate": result["validate"],
+            "challenge": init_data["challenge"],
+        }
+    }
 
 
 if __name__ == '__main__':
-    x = get_trace(95)
+    x = crack()
     print(x)

@@ -19,7 +19,10 @@ def _pic_download(url, type):
     :param type:
     :return:
     """
-    img_path = os.path.abspath('...') + '\\' + '{}.jpg'.format(type)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
     img_data = requests.get('https://verifycode.58.com' + url).content
     with open(img_path, 'wb') as f:
         f.write(img_data)
@@ -33,6 +36,10 @@ def get_distance(slider_url, captcha_url):
     :param captcha_url:
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
     # 引用上面的图片下载
     slider_path = _pic_download(slider_url, 'slider')
     w, h = Image.open(slider_path).size
@@ -43,8 +50,8 @@ def get_distance(slider_url, captcha_url):
     # # 计算拼图还原距离
     target = cv2.imread(slider_path, 0)
     template = cv2.imread(captcha_path, 0)
-    temp = 'temp.jpg'
-    targ = 'targ.jpg'
+    temp = save_path + '\\' + 'temp.jpg'
+    targ = save_path + '\\' + 'targ.jpg'
     cv2.imwrite(targ, target)
     cv2.imwrite(temp, template)
 
@@ -65,7 +72,7 @@ def get_distance(slider_url, captcha_url):
     # 切割
     imagecrop = image.crop(xy)
     # 保存切割的缺口
-    imagecrop.convert('RGB').save("new_image.jpg")
+    imagecrop.convert('RGB').save(save_path + '\\' + "new_image.jpg")
     imagecrop.show()
     return int(round(y))
 

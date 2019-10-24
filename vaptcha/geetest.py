@@ -106,14 +106,14 @@ def crack():
     # 下载验证码
     img_path = _pic_download('https://cdn.vaptcha.com/' + init_data['img'], 'vaptcha')
     img = Image.open(img_path)
-    img.show()
+    # img.show()
 
     # 使用超级鹰识别
     img_data = open(img_path, 'rb').read()
     ok, result = image_to_text(img_data, img_kind=9004)
-    if ok:
-        position = [x for x in result.split('|')]
-        print('超级鹰识别结果: ', result)
+    position = [x for x in result.split('|')]
+    print('超级鹰识别结果: ', result)
+    if ok and len(position) == 4:
         trace = generate_trace(position, img.size)
         # print(trace)
         result = _slider_verify(challenge, trace)

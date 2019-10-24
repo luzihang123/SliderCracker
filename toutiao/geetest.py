@@ -33,7 +33,10 @@ def _pic_download(url, type):
     :param type:
     :return:
     """
-    img_path = os.path.abspath('...') + '\\' + '{}.jpg'.format(type)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
     img_data = requests.get(url).content
     with open(img_path, 'wb') as f:
         f.write(img_data)
@@ -47,6 +50,10 @@ def get_distance(slider_url, captcha_url):
     :param captcha_url:
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
     # 引用上面的图片下载
     slider_path = _pic_download(slider_url, 'slider')
 
@@ -58,8 +65,8 @@ def get_distance(slider_url, captcha_url):
     template = cv2.imread(captcha_path, 0)
     w, h = target.shape[::-1]
 
-    temp = 'temp.jpg'
-    targ = 'targ.jpg'
+    temp = save_path + '\\' + 'temp.jpg'
+    targ = save_path + '\\' + 'targ.jpg'
     cv2.imwrite(temp, template)
     cv2.imwrite(targ, target)
     target = cv2.imread(targ)
@@ -82,7 +89,7 @@ def get_distance(slider_url, captcha_url):
     # 切割
     imagecrop = image.crop(xy)
     # 保存切割的缺口
-    imagecrop.save("new_image.png")
+    imagecrop.save(save_path + '\\' + "new_image.png")
     # imagecrop.show()
     return y
 
@@ -95,10 +102,17 @@ def generate_trace(distance, tip_y, start_time):
     :param start_time:
     :return:
     """
-    # 轨迹已删除
+    # 轨迹删除
+    trace = []
+    for index, x in enumerate(tracks_list):
+        trace.append({
+            'relative_time': timestamp_list[index] - start_time,
+            'x': int(x),
+            'y': tip_y
+        })
     trace.append({
         'relative_time': timestamp_list[-1] - start_time + random.randint(80, 140),
-        'x': timestamp_list[-1],
+        'x': tracks_list[-1],
         'y': tip_y
     })
     return trace
@@ -184,6 +198,8 @@ def crack():
     time.sleep(random.uniform(0.02, 0.05))
     # 伪造轨迹
     trace = generate_trace(distance, init_data['tip_y'], start_time)
+    # 模拟人为延时, 停顿 1 到 2 秒, 很重要
+    time.sleep(random.randint(1, 2))
     result = _slider_verify(init_data['cid'], trace)
     if result:
         return {

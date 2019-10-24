@@ -48,7 +48,7 @@ class AESCrypt:
         ciphertext = cryptor.encrypt(text)
 
         # 因为AES加密时候得到的字符串不一定是ascii字符集的，输出到终端或者保存时候可能存在问题
-        # 所以这里统一把加密后的字符串转化为16进制字符串 "Kd34yA0KlX5E6g06WVy187bKxgTtg1M0Ml5vXK859Ooy7ACjXGdLZH1Y2xbNbAfL"  "wpgNVJD3xtv3oVzPDD4U8EiAJLijmCtQ"
+        # 所以这里统一把加密后的字符串转化为16进制字符串
         return b2a_hex(ciphertext).decode('ISO-8859-1')
 
     @staticmethod

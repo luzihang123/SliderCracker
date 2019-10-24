@@ -19,7 +19,11 @@ def _pic_download(url, type):
     :param type:
     :return:
     """
-    img_path = os.path.abspath('...') + '\\' + '{}.jpg'.format(type)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
     img_data = requests.get(url).content
     with open(img_path, 'wb') as f:
         f.write(img_data)
@@ -63,7 +67,7 @@ def _cut_slider(path):
                 y.append(j)
     z = (np.min(x), np.min(y), np.max(x), np.max(y))
     result = image.crop(z)
-    result.convert('RGB').save('targ.jpg')
+    result.convert('RGB').save(path)
     # result.show()
     return result.size[0], result.size[1]
 
@@ -75,15 +79,21 @@ def get_merge_image(location_list, url):
     :param url: 图片 url
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
     filename = _pic_download(url, 'all')
     im = Image.open(filename)
     width, height = im.size
     # print(width, height)
     big = im.crop((0, 0, 260, height))
-    big.convert('RGB').save('captcha.jpg')
+    captcha_path = save_path + '\\' + 'captcha.jpg'
+    slider_path = save_path + '\\' + 'slider.jpg'
+    big.convert('RGB').save(captcha_path)
 
     small = im.crop((260, 0, width, height))
-    small.convert('RGB').save('slider.jpg')
+    small.convert('RGB').save(slider_path)
 
     new_im = Image.new('RGB', (260, height))
 
@@ -103,7 +113,8 @@ def get_merge_image(location_list, url):
         x_offset += 13
 
     new_im.show()
-    new_im.save('captcha.jpg')
+    new_im.save(captcha_path)
+    return captcha_path, slider_path
 
 
 def process_img(img1, img2):
@@ -126,12 +137,16 @@ def _get_distance(location_list, url):
     :param url: 验证码图片合集
     :return:
     """
-    get_merge_image(location_list, url)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
+    captcha_path, slider_path = get_merge_image(location_list, url)
     # 计算拼图还原距离
-    target = cv2.imread('slider.jpg', 0)
-    template = cv2.imread('captcha.jpg', 0)
-    temp = 'temp.jpg'
-    targ = 'targ.jpg'
+    target = cv2.imread(slider_path, 0)
+    template = cv2.imread(captcha_path, 0)
+    temp = save_path + '\\' + 'temp.jpg'
+    targ = save_path + '\\' + 'targ.jpg'
     process_img(temp, template)
     process_img(targ, target)
     w, h = _cut_slider(targ)
@@ -144,12 +159,12 @@ def _get_distance(location_list, url):
     # print((y, x, y + w, x + h))
 
     # 调用PIL Image 做测试
-    image = Image.open('captcha.jpg')
+    image = Image.open(captcha_path)
 
     xy = (y + 3, x, y + w, x + h)
     # 切割
     imagecrop = image.crop(xy)
     # 保存切割的缺口
-    imagecrop.save("new_image.jpg")
+    imagecrop.save(save_path + '\\' + "new_image.jpg")
     imagecrop.show()
     return int(y + 3)

@@ -136,6 +136,12 @@
     * 轨迹加密: 自定义算法, ysf_slider.js。
     * 说明: 缺口距离获取不准确。
     
+* 东方财富网
+    * 轨迹加密: 自定义算法, em_slider.js。
+    * 图像处理: 固定还原数组。<br>
+        * 前端: js 处理生成 css 插入 html, css 还原。<br>
+        * 处理: python 复写 js 生成正确位置 PIL 切割粘贴还原。<br>
+    * 说明: 轨迹已删除。
     
 环境依赖
 --------
@@ -216,6 +222,8 @@ $ pip install -r ./requirements.txt
 * 云闪付
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/yunshanfu.png)
 
+* 东方财富网
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/eastmoney.png)
 
 公告
 --------

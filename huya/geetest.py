@@ -5,6 +5,19 @@
 # @File    : geetest.py
 # @Software: PyCharm
 
+import os
+import numpy as np
+import requests
+import json
+import random
+import time
+from PIL import Image
+import cv2
+import base64
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
+
+
 """
 虎牙滑块验证通过后返回 json 数据样式:
 {
@@ -18,17 +31,6 @@
     'data': {'code': 0}  // code 为 0 时通过, -1 时未通过
 }
 """
-
-import numpy as np
-import requests
-import json
-import random
-import time
-from PIL import Image
-import cv2
-import base64
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad
 
 headers = {
     'Content-Type': 'application/json',
@@ -63,14 +65,19 @@ def _pic_download(code, type):
     :param type: 类型
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
     url = 'https://captcha.huya.com/slider/getPuzzleImage?'
     params = {
         'type': type,
         'code': code
     }
     img_data = requests.get(url, params=params, headers=headers).content
-    with open('{}.jpg'.format(type), 'wb') as f:
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
+    with open(img_path, 'wb') as f:
         f.write(img_data)
+    return img_path
 
 
 def _cut_slider(path):
@@ -100,20 +107,23 @@ def _get_distance(code):
     :param code:
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
     # 下载背景
-    _pic_download(code, 'big')
+    captcha_path = _pic_download(code, 'big')
 
     # 下载滑块
-    _pic_download(code, 'small')
+    slider_path = _pic_download(code, 'small')
 
     # # 计算拼图还原距离
-    target = cv2.imread('small.jpg', 0)
-    template = cv2.imread('big.jpg', 0)
-    temp = 'temp.jpg'
-    targ = 'targ.jpg'
+    target = cv2.imread(slider_path, 0)
+    template = cv2.imread(captcha_path, 0)
+    temp = save_path + '\\' + 'temp.jpg'
+    targ = save_path + '\\' + 'targ.jpg'
     cv2.imwrite(temp, template)
     cv2.imwrite(targ, target)
-    w, h = _cut_slider('targ.jpg')
+    w, h = _cut_slider(targ)
     target = cv2.imread(targ)
     target = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY)
     target = abs(255 - target)
@@ -126,13 +136,13 @@ def _get_distance(code):
     # print((y, x, y + w, x + h))
 
     # 调用PIL Image 做测试
-    image = Image.open('big.jpg')
+    image = Image.open(captcha_path)
 
     xy = (y, x, y + w, x + h)
     # 切割
     imagecrop = image.crop(xy)
     # 保存切割的缺口
-    imagecrop.convert('RGB').save("new_image.jpg")
+    imagecrop.convert('RGB').save(save_path + '\\' + "new_image.jpg")
     imagecrop.show()
     return int(y)
 
@@ -143,35 +153,7 @@ def _generate_trace(distance):
     :param distance:
     :return:
     """
-    zx = random.randint(30, 50)
-    # 初速度
-    v = 0
-    # 位移/轨迹列表，列表内的一个元素代表0.02s的位移
-    tracks_list = []
-    # 当前的位移
-    current = 0
-    while current < distance - 13:
-        # 加速度越小, 单位时间的位移越小, 模拟的轨迹就越多越详细
-        a = random.randint(10000, 12000)  # 加速运动
-        # 初速度
-        v0 = v
-        t = random.randint(9, 18)
-        s = v0 * t / 1000 + 0.5 * a * ((t / 1000) ** 2)
-        # 当前的位置
-        current += s
-        # 速度已经达到v, 该速度作为下次的初速度
-        v = v0 + a * t / 1000
-        # 添加到轨迹列表
-        if current < distance:
-            tracks_list.append(round(current))
-    # 减速慢慢滑
-    if round(current) < distance:
-        for i in range(round(current) + 1, distance + 1):
-            tracks_list.append(i)
-    else:
-        for i in range(tracks_list[-1] + 1, distance + 1):
-            tracks_list.append(i)
-    tracks_list.append(distance)
+    # 轨迹删除
     trace = []
     for index, x in enumerate(tracks_list):
         trace.append({

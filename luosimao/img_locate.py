@@ -19,7 +19,11 @@ def _pic_download(url, type):
     :param type:
     :return:
     """
-    img_path = os.path.abspath('...') + '\\' + '{}.jpg'.format(type)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
     img_data = requests.get(url).content
     with open(img_path, 'wb') as f:
         f.write(img_data)
@@ -31,6 +35,10 @@ def make_word(text):
     制作描述图片
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
     text = text.replace('<i>', '').replace('</i>', '')
     # 初始化图片对象, (300, 30)为图片大小, (255, 255, 255) 为白色背景
     img = Image.new('RGB', (300, 30), (255, 255, 255))
@@ -41,7 +49,7 @@ def make_word(text):
     # 添加文字, (0, 0): 文字起始坐标, (0, 0, 0): 颜色(黑色), font: 字体
     draw.text((0, 0), text, (0, 0, 0), font=font)
     # img.show()
-    img_path = os.path.abspath('...') + '\\' + 'word.jpg'
+    img_path = save_path + '\\' + 'word.jpg'
     img.save(img_path)
     return img_path
 
@@ -83,6 +91,9 @@ def merge_word(img1, img2):
     将描述性文字合并到验证码图片上, 以便交给打码平台识别
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
     new_image = Image.new('RGB', (300, 190))
     img1 = Image.open(img1)
     new_image.paste(img1, (0, 0))
@@ -91,7 +102,7 @@ def merge_word(img1, img2):
     new_image.paste(img2, (0, 160))
 
     new_image.show()
-    img_path = os.path.abspath('...') + '\\' + 'new_captcha.jpg'
+    img_path = save_path + '\\' + 'new_captcha.jpg'
     new_image.save(img_path)
     return img_path
 

@@ -31,7 +31,11 @@ def _pic_download(url, type):
     :param type:
     :return:
     """
-    img_path = os.path.abspath('...') + '\\' + '{}.jpg'.format(type)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
     img_data = session.get(url).content
     with open(img_path, 'wb') as f:
         f.write(img_data)
@@ -54,7 +58,7 @@ def _cut_slider(path):
                 y.append(j)
     z = (np.min(x), np.min(y), np.max(x), np.max(y))
     result = image.crop(z)
-    result.convert('RGB').save('targ.jpg')
+    result.convert('RGB').save(path)
     # result.show()
     return result.size[0], result.size[1]
 
@@ -66,11 +70,12 @@ def _get_distance(slider_url, captcha_url):
     :param captcha_url: 验证码图片 url
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
 
     # 引用上面的图片下载
     slider_path = _pic_download(slider_url, 'slider')
-
-    # time.sleep(2)
 
     # 引用上面的图片下载
     captcha_path = _pic_download(captcha_url, 'captcha')
@@ -78,8 +83,8 @@ def _get_distance(slider_url, captcha_url):
     # # 计算拼图还原距离
     target = cv2.imread(slider_path, 0)
     template = cv2.imread(captcha_path, 0)
-    temp = 'temp.jpg'
-    targ = 'targ.jpg'
+    temp = save_path + '\\' + 'temp.jpg'
+    targ = save_path + '\\' + 'targ.jpg'
     cv2.imwrite(targ, target)
     w, h = _cut_slider(slider_path)
     cv2.imwrite(temp, template)
@@ -99,7 +104,7 @@ def _get_distance(slider_url, captcha_url):
     # 切割
     imagecrop = image.crop(xy)
     # 保存切割的缺口
-    imagecrop.save("new_image.jpg")
+    imagecrop.save(save_path + '\\' + "new_image.jpg")
     imagecrop.show()
     return int(y + 15)
 

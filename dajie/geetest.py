@@ -118,7 +118,11 @@ def _pic_download(url, type):
     :param type:
     :return:
     """
-    img_path = os.path.abspath('...') + '\\' + '{}.jpg'.format(type)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
     cookies = {
         'csid': re.search('csid=(.*?)&', url).group(1)
     }
@@ -134,6 +138,10 @@ def merge_img(init_data, url):
     :param init_data:
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
     img_path = _pic_download(url, 'captcha')
     captcha = Image.open(img_path)
     new_captcha = Image.new('RGB', captcha.size)
@@ -153,8 +161,9 @@ def merge_img(init_data, url):
         imgcrop = captcha.crop((sequence[i] % col * x, num * y, sequence[i] % col * x + x, num * y + y))
         new_captcha.paste(imgcrop, (i % col * x, num * y))
     new_captcha.show()
-    new_captcha.save('new_captcha.jpg')
-    with open('new_captcha.jpg', 'rb') as f:
+    new_cappath = save_path + '\\' + 'new_captcha.jpg'
+    new_captcha.save(new_cappath)
+    with open(new_cappath, 'rb') as f:
         img_data = f.read()
     return img_data
 

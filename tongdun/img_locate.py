@@ -20,7 +20,11 @@ def _pic_download(url, type):
     :param type:
     :return:
     """
-    img_path = os.path.abspath('...') + '\\' + '{}.jpg'.format(type)
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
+    img_path = save_path + '\\' + '{}.jpg'.format(type)
     img_data = requests.get('https://static.tongdun.net' + url).content
     with open(img_path, 'wb') as f:
         f.write(img_data)
@@ -28,6 +32,12 @@ def _pic_download(url, type):
 
 
 def get_merge_str(imageGeneral, bgImageSplitSequence):
+    """
+    获取图片还原数组
+    :param imageGeneral:
+    :param bgImageSplitSequence:
+    :return:
+    """
     with open('merge_img.js', 'rb') as f:
         js = f.read().decode()
     ctx = execjs.compile(js)
@@ -76,7 +86,12 @@ def merge_img(init_data):
                 new_image.paste(upper_list[m], (round(320 / 8) * (n - 8), 90))
 
     new_image.show()
-    img_path = os.path.abspath('...') + '\\' + 'new_captcha.jpg'
+
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
+    img_path = save_path + '\\' + 'new_captcha.jpg'
     new_image.save(img_path)
     return img_path
 
@@ -97,7 +112,7 @@ def _cut_slider(path):
                 y.append(j)
     z = (np.min(x), np.min(y), np.max(x), np.max(y))
     result = image.crop(z)
-    result.convert('RGB').save('targ.jpg')
+    result.convert('RGB').save(path)
     # result.show()
     return result.size[0], result.size[1]
 
@@ -108,6 +123,9 @@ def get_distance(init_data):
     :param init_data: 验证码初始化数据
     :return:
     """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
 
     # 引用上面的图片下载
     slider_path = _pic_download(init_data['validateCodeObj']['slideImage'], 'slider')
@@ -118,8 +136,8 @@ def get_distance(init_data):
     # # 计算拼图还原距离
     target = cv2.imread(slider_path, 0)
     template = cv2.imread(captcha_path, 0)
-    temp = 'temp.jpg'
-    targ = 'targ.jpg'
+    temp = save_path + '\\' + 'temp.jpg'
+    targ = save_path + '\\' + 'targ.jpg'
     cv2.imwrite(targ, target)
     w, h = _cut_slider(slider_path)
     cv2.imwrite(temp, template)
@@ -139,11 +157,10 @@ def get_distance(init_data):
     # 切割
     imagecrop = image.crop(xy)
     # 保存切割的缺口
-    imagecrop.convert('RGB').save("new_image.jpg")
+    imagecrop.convert('RGB').save(save_path + '\\' + "new_image.jpg")
     imagecrop.show()
     return int(round(y))
 
 
 if __name__ == '__main__':
-    img = Image.open('captcha.jpg')
-    print(img.size)
+    pass

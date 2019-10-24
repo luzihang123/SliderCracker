@@ -55,6 +55,7 @@ class IqiyiSliderCracker:
             'area_code': '86',
             'dfp': self.dfp,
             'env_token': env_token,
+            # 环境参数: 当前环境可能存在风险
             'envinfo': 'eyJqbiI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS83NS4wLjM3NzAuODAgU2FmYXJpLzUzNy4zNiIsImNtIjoiemgtQ04iLCJndSI6MjQsInVmIjoxLCJqciI6WzEzNjYsNzY4XSwiZGkiOlsxMzY2LDcyOF0sInpwIjotNDgwLCJ1aCI6MSwic2giOjEsImhlIjoxLCJ6byI6MSwicnYiOiJ1bmtub3duIiwibngiOiJXaW4zMiIsIml3IjoidW5rbm93biIsInFtIjpbIkNocm9tZSBQREYgUGx1Z2luOjpQb3J0YWJsZSBEb2N1bWVudCBGb3JtYXQ6OmFwcGxpY2F0aW9uL3gtZ29vZ2xlLWNocm9tZS1wZGZ+cGRmIiwiQ2hyb21lIFBERiBWaWV3ZXI6Ojo6YXBwbGljYXRpb24vcGRmfnBkZiIsIk5hdGl2ZSBDbGllbnQ6Ojo6YXBwbGljYXRpb24veC1uYWNsfixhcHBsaWNhdGlvbi94LXBuYWNsfiJdLCJ3ciI6ImI3NzY2NGM3MTcwNzdhZmZmMzNhN2QyODM2ZTIzNzdjIiwid2ciOiJlZDI2NTg5MTM1MTJlNTA5MmZlMjE5NDAwOGQ3OWEwZSIsImZrIjpmYWxzZSwicmciOmZhbHNlLCJ4eSI6ZmFsc2UsImptIjpmYWxzZSwiYmEiOmZhbHNlLCJ0bSI6WzAsZmFsc2UsZmFsc2VdLCJhdSI6dHJ1ZSwibWkiOiI5YTZlZWMzMS0xODAxLWI5ZGEtMDU3My1jMTVmOGVhMjVlNDEiLCJjbCI6IlBDV0VCIiwic3YiOiIxLjAiLCJqZyI6IjhkYTZmNDY5NmQ4YmU1ODFkMDliNzE3MTkwNTIxMGI5IiwiZmgiOiI0OGZpem1rcnZkejJ3Y2Q2ZzhqMXNybjkiLCJpZm0iOlt0cnVlLDQ2MCw0MjAsImh0dHBzOi8vd3d3LmlxaXlpLmNvbS8iXSwiZXgiOiIiLCJkdiI6Im9mZiIsInB2Ijp0cnVlfQ=='
         }
         result = self.session.post(url, data=data).json()
@@ -200,7 +201,7 @@ class IqiyiSliderCracker:
         if not token:
             return {
                 'success': 0,
-                'message': '该 dfp 参数已过期, 请更换未过期并且可疑的 dfp 参数, 以便触发滑块验证! ',
+                'message': '该 dfp 参数未存在风险或已过期, 请更换未过期并且可疑的 dfp 参数, 以便触发滑块验证! ',
                 'data': None
             }
         # 初始化密钥, 明文传输 i、加密传输 r 这两个参数给服务器, 服务器会返回给你一个 sr 和 sid
@@ -238,5 +239,5 @@ class IqiyiSliderCracker:
 
 
 if __name__ == '__main__':
-    x = IqiyiSliderCracker('a1835676114a1946afb9b57417746ac8cc1ae2ca2e797a88078f7be3ba64f4db31').crack()
+    x = IqiyiSliderCracker('a10de51d85507d4b159df56da0ae46409210a03221b652d1fc525cc67fb0f65917').crack()
     print(x)
