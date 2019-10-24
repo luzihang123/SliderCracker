@@ -136,7 +136,7 @@ def get_distance(captcha_url, slider_url):
     # 保存切割的缺口
     imagecrop.convert('RGB').save(save_path + '\\' + "new_image.jpg")
     imagecrop.show()
-    return int(round(y))
+    return int(round(y)) + 2
 
 
 def get_position(full, words):
