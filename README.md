@@ -1,11 +1,13 @@
 各类验证码 js 破解
 ===================================
-![](https://img.shields.io/badge/Python-3.6.3-green.svg) ![](https://img.shields.io/badge/requests-2.20.0-green.svg) ![](https://img.shields.io/badge/PyExecJS-1.5.1-green.svg)     
+![](https://img.shields.io/badge/Python-3.7.2-green.svg) ![](https://img.shields.io/badge/requests-2.20.0-green.svg) ![](https://img.shields.io/badge/PyExecJS-1.5.1-green.svg) ![](https://img.shields.io/badge/pycryptodemo-3.9.0-green.svg)     
+### 
 |Author|:sunglasses:Esbiya:sunglasses:|
 |---|---
 |Email|:hearts:18829040039@163.com:hearts:|
 |---|---
 |QQ|:hearts:2995438815:hearts:
+
 
 ****
 ### :dolphin:声明
@@ -240,8 +242,8 @@ pip3 install -r requirements.txt
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/eastmoney.png)
 
 ## :dolphin:统一回复
-### 本人 js 水平有限, 目前对阿里系、腾讯系、苏宁易购、顶象等验证码的 js 加密混淆暂时无法破解, 如果有能破解的大佬, 希望能指点一下, 感谢!
-### 有无法破解的验证码、登陆校验或者加密参数校验等, 可以 issue 留言或者邮件/qq交流, 我会尝试破解, 但是不保证破解成功, 大家一起交流学习!
+> **本人 js 水平有限, 目前对阿里系、腾讯系、苏宁易购、顶象等验证码的 js 加密混淆暂时无法破解, 如果有能破解的大佬, 希望能指点一下, 感谢!<br>
+ 有无法破解的验证码、登陆校验或者加密参数校验等, 可以 issue 留言或者邮件/qq交流, 我会尝试破解, 但是不保证破解成功, 大家一起交流学习!**
 
 ## :dolphin:**最后**
 > **本项目不定期更新, 如果本项目帮助到了您, 请您给个 Star, 感谢!**:cupid::cupid:
