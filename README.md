@@ -1,5 +1,32 @@
-# 各类验证码 js 破解
+各类验证码 js 破解
+===================================
+![](https://img.shields.io/badge/Python-3.6.3-green.svg) ![](https://img.shields.io/badge/requests-2.20.0-green.svg) ![](https://img.shields.io/badge/PyExecJS-1.5.1-green.svg)     
+|Author|:sunglasses:Esbiya:sunglasses:|
+|---|---
+|Email|:hearts:18829040039@163.com:hearts:|
+|---|---
+|QQ|:hearts:2995438815:hearts:
 
+****
+### :dolphin:声明
+### 本项目仅用于学习交流, 请勿用于任何商业用途！感谢大家！
+### 如若涉及侵权，请邮件或qq联系删除! 
+
+## :dolphin:运行环境
+```
+Version: Python3
+```
+## :dolphin:安装依赖库
+```
+pip3 install -r requirements.txt
+```
+- **使用 execjs 执行 js。**
+- **python 复写的加密使用的包为 pycryptodemo。**
+- **execjs 执行环境为 node.js。自行下载安装 node.js。
+  ps: 注意: 安装完毕后, 使用 execjs.get().name 判断运行环境是否已成功切换为 'Node.js(V8)', 若未切换成功, 使用 os.environ["EXECJS_RUNTIME"] = "Node" 切换。**
+- **使用 PIL 结合 cv2 进行图像处理识别。**
+
+## :dolphin:分析说明
 
 * Vaptcha<br>
     * 轨迹加密: 自定义加密。<br>
@@ -144,21 +171,7 @@
         * 处理: python 复写 js 生成正确位置 PIL 切割粘贴还原。<br>
     * 说明: 轨迹已删除。
     
-环境依赖
---------
-
-``` shell script
-$ pip install -r ./requirements.txt
-```
-
-* 使用 execjs 执行 js。 
-* python 复写的加密使用的包为 pycryptodemo。
-* execjs 执行环境为 node.js。自行下载安装 node.js。
-  注意: 安装完毕后, 使用 execjs.get().name 判断运行环境是否已成功切换为 'Node.js(V8)', 若未切换成功, 使用 os.environ["EXECJS_RUNTIME"] = "Node" 切换。
-* 使用 PIL 结合 cv2 进行图像处理识别。
-
-结果展示
---------
+## :dolphin:**运行截图**
 
 * Vaptcha
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/vaptcha.png)
@@ -226,7 +239,9 @@ $ pip install -r ./requirements.txt
 * 东方财富网
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/eastmoney.png)
 
-公告
---------
+## :dolphin:统一回复
+### 本人 js 水平有限, 目前对阿里系、腾讯系、苏宁易购、顶象等验证码的 js 加密混淆暂时无法破解, 如果有能破解的大佬, 希望能指点一下, 感谢!
+### 有无法破解的验证码、登陆校验或者加密参数校验等, 可以 issue 留言或者邮件/qq交流, 我会尝试破解, 但是不保证破解成功, 大家一起交流学习!
 
-该项目仅供学习参考, 请勿用作非法用途! 如若涉及侵权, 请联系2995438815@qq.com/18829040039@163.com, 收到必删除! 
+## :dolphin:**最后**
+> **本项目不定期更新, 如果本项目帮助到了您, 请您给个 Star, 感谢!**:cupid::cupid:
