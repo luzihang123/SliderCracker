@@ -183,7 +183,7 @@ def main():
         captcha_url = 'https://verifycode.58.com' + init_data['captcha_url']
         img_data = process_img(captcha_url, init_data['type'])
         # 超级鹰识别点选位置
-        ok, position = image_to_text(img_data)
+        ok, position = image_to_text(img_data, img_kind=9004)
         if ok:
             position = [i for i in position.split('|')]
             # 伪造轨迹
