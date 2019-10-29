@@ -102,7 +102,8 @@ def test3():
 
 def test4():
     """
-    拉勾登录测试, gt 固定
+    拉勾登录测试: https://passport.lagou.com/login/login.html?utm_source=m_cf_cpt_360_pc1
+    gt 固定, 图片选择, 类似谷歌 recaptcha
     :return:
     """
     result = GeetestV3New('66442f2f720bfc86799932d8ad2eb6c7').crack()
