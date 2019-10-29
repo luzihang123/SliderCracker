@@ -39,7 +39,9 @@ pip3 install -r requirements.txt
     * 轨迹加密: 无, 明文传输。
     * 说明: 轨迹已删除, 校验不严格, 匀加速即可。
 
-* 极验2
+* 极验
+    * 项目中开源版本为极验2, 适用网站如某查、某买等。
+    * 最新极验全家桶纯 python 实现(包括点选、滑动), 某比特币网站交易平台注册采用最新版本极验3, 已破解, 不开源。
 
 * 安居客<br>
     * 轨迹加密: AES CBC 模式, Pkcs7Padding 填充。<br>
@@ -182,6 +184,9 @@ pip3 install -r requirements.txt
 
 * 极验2
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/geetest2.png)
+
+* 极验3
+![image](https://github.com/Esbiya/SliderCracker/blob/master/view/geetest3.png)
 
 * 安居客
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/anjuke.png)
