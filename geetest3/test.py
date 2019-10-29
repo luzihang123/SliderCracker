@@ -100,6 +100,27 @@ def test3():
     }
 
 
+def test4():
+    """
+    拉勾登录测试, gt 固定
+    :return:
+    """
+    result = GeetestV3New('66442f2f720bfc86799932d8ad2eb6c7').crack()
+    if result:
+        return {
+            'success': 1,
+            'message': '校验通过! ',
+            'data': {
+                'validate': result
+            }
+        }
+    return {
+        'success': 0,
+        'message': '校验失败! ',
+        'data': None
+    }
+
+
 if __name__ == '__main__':
     print('开始测试...')
     print('=' * 100)
@@ -108,7 +129,8 @@ if __name__ == '__main__':
     while num <= 100:
         # x = test1()
         # x = test2()
-        x = test3()
+        # x = test3()
+        x = test4()
         print(x)
         print('=' * 100)
         if x['success']:
