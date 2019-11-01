@@ -6,7 +6,6 @@ PyExecJS==1.5.1
 opencv_python==4.1.0.25
 requests==2.21.0
 rsa==4.0
-pycrypto==2.6.1
 pycryptodome=3.9.0
 Pillow==6.2.1
 beautifulsoup4==4.8.1
