@@ -27,7 +27,7 @@ def encrypt(key, text):
         add = (length - (count % length))
         text = text + ('\0' * add)
     ciphertext = encrypter.encrypt(text.encode())
-    return base64.b64encode(ciphertext)
+    return base64.b64encode(ciphertext).decode()
 
 
 def decrypt(key, text):
@@ -42,4 +42,7 @@ def decrypt(key, text):
 
 
 if __name__ == '__main__':
-    pass
+    text = base64.b64decode("+Xtt67nCLT4=")
+    # 对解码后的 k 值进行 DES 解密（密钥: sshummei）, 取前8位作为下一次加密的密钥
+    new_key = decrypt('sshummei', text)[:8]
+    print(new_key)

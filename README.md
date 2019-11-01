@@ -71,7 +71,8 @@ pip3 install -r requirements.txt
 * 数美<br>
     * 轨迹加密: DES CBC模式, ZeroPadding 填充。<br>
     * 说明: 当接口返回数据中 riskLevel 字段为 PASS 即为验证通过, 在之后的请求中携带 rid 即可。
-
+    * 更新: 数美更新(2019/11/1日, 测试可用), geetest_new.py 
+    
 * 携程<br>
     * 轨迹加密: 固定密钥, 随机偏移量 AES 加密轨迹, md5 加密验签(删除关键js, 请自行补全, 如有需要, 且是正当需求, 请提issue或者发邮件给我)。
     
