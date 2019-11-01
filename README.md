@@ -10,7 +10,7 @@
 
 ****
 ### :dolphin:声明
-### 本项目仅用于学习交流, 请遵守当地法律法规, 勿用于任何商业用途！感谢大家！
+### 本项目仅用于学习交流, 请遵守当地法律法规, 勿用于任何商业用途, 否则后果自负！感谢大家！
 ### 如若涉及侵权，请邮件或qq联系删除! 
 
 ## :dolphin:运行环境
@@ -19,10 +19,10 @@ Version: Python3
 ```
 ## :dolphin:安装依赖库
 ```
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 ```
 - **使用 execjs 执行 js。**
-- **python 复写的加密使用的包为 pycryptodemo。**
+- **python 复写的加密使用的包为 pycryptodome。**
 - **execjs 执行环境为 node.js。自行下载安装 node.js。
   ps: 注意: 安装完毕后, 使用 execjs.get().name 判断运行环境是否已成功切换为 'Node.js(V8)', 若未切换成功, 使用 os.environ["EXECJS_RUNTIME"] = "Node" 切换。**
 - **使用 PIL 结合 cv2 进行图像处理识别。**
