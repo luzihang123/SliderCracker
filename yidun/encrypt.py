@@ -40,12 +40,54 @@ def _get_fp(js):
     return ctx_.call('generateFingerprint')
 
 
-def _encrypt_data(js, token, trace):
+def _encrypt_slider(js, token, trace, width):
     """
+    滑块验证加密
     加密轨迹
     :param token:
     :param trace:
+    :param width
     :return:
     """
     ctx = execjs.compile(js)
-    return ctx.call('encrypt', token, trace)
+    return ctx.call('slider_encrypt', token, trace, width)
+
+
+def _encrypt_click(js, token, trace, position):
+    """
+    点选验证加密
+    加密轨迹与点选位置
+    :param js:
+    :param token:
+    :param trace:
+    :param position:
+    :return:
+    """
+    ctx = execjs.compile(js)
+    return ctx.call('click_encrypt', token, trace, position)
+
+
+def _encrypt_sense(js, token, trace, position):
+    """
+    无感验证加密
+    加密轨迹与点击位置
+    :param js:
+    :param token:
+    :param trace:
+    :param position:
+    :return:
+    """
+    ctx = execjs.compile(js)
+    return ctx.call('sense_encrypt', token, trace, position)
+
+
+def _encrypt_validate(js, validate, fp):
+    """
+    加密 validate
+    :param js:
+    :param validate: 验证码通过签名
+    :param fp: 指纹
+    :return:
+    """
+    ctx = execjs.compile(js)
+    return ctx.call('encrypt_validate', validate, fp)

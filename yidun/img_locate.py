@@ -10,6 +10,8 @@ import numpy as np
 import requests
 from PIL import Image
 import cv2
+from PIL import ImageFont
+from PIL import ImageDraw
 
 
 def _pic_download(url, type):
@@ -91,3 +93,48 @@ def _get_distance(slider_url, captcha_url):
     imagecrop.save(save_path + '\\' + "new_image.jpg")
     # imagecrop.show()
     return int(y + 3)
+
+
+def make_word(text):
+    """
+    制作描述图片
+    :return:
+    """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+
+    text = text.replace('<i>', '').replace('</i>', '')
+    # 初始化图片对象, (300, 30)为图片大小, (255, 255, 255) 为白色背景
+    img = Image.new('RGB', (300, 30), (255, 255, 255))
+    # 设置字体
+    font = ImageFont.truetype('simsun.ttc', 15)
+    # 初始化写入对象
+    draw = ImageDraw.Draw(img)
+    # 添加文字, (0, 0): 文字起始坐标, (0, 0, 0): 颜色(黑色), font: 字体
+    draw.text((0, 0), text, (0, 0, 0), font=font)
+    # img.show()
+    img_path = save_path + '\\' + 'word.jpg'
+    img.save(img_path)
+    return img_path
+
+
+def merge_word(img1, img2, width):
+    """
+    将描述性文字合并到验证码图片上, 以便交给打码平台识别
+    :return:
+    """
+    save_path = os.path.abspath('...') + '\\' + 'images'
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+    new_image = Image.new('RGB', (width, 190))
+    img1 = Image.open(img1)
+    new_image.paste(img1, (0, 0))
+
+    img2 = Image.open(img2)
+    new_image.paste(img2, (0, 160))
+
+    # new_image.show()
+    img_path = save_path + '\\' + 'new_captcha.jpg'
+    new_image.save(img_path)
+    return img_path
