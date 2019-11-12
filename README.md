@@ -20,6 +20,7 @@
 ```
 Version: Python3
 ```
+
 ## :dolphin:安装依赖库
 ```
 pip install -r requirements.txt
@@ -32,6 +33,10 @@ pip install -r requirements.txt
 
 ## :dolphin:分析说明
 
+* 腾讯防水墙
+    * 环境轨迹校验: 动态混淆自定义加密。<br>
+    * 说明: 删除主要代码, js 未上传, geetest.py 中只有流程, 具体实现请自行调试。
+    
 * Vaptcha<br>
     * 轨迹加密: 自定义加密。<br>
     * 说明: <br>
@@ -179,6 +184,9 @@ pip install -r requirements.txt
     * 说明: 轨迹已删除。
     
 ## :dolphin:**运行截图**
+
+* 腾讯防水墙
+![imgae](https://github.com/Esbiya/SliderCracker/blob/master/view/tengxun.png)
 
 * Vaptcha
 ![image](https://github.com/Esbiya/SliderCracker/blob/master/view/vaptcha.png)
