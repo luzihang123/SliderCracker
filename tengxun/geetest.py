@@ -257,7 +257,7 @@ def init_slider(aid, page_session):
     return init_data, cap_challenge
 
 
-def _slider_verify(start_time, ans, trace, page_session, init_data, fpsig, eks, referer):
+def _slider_verify(start_time, ans, trace, page_session, init_data, fpsig, eks, cdata, referer):
     """
     最终验证
     :return:
@@ -292,7 +292,7 @@ def _slider_verify(start_time, ans, trace, page_session, init_data, fpsig, eks, 
         'createIframeStart': start_time * 1000 - random.randint(500, 1000),
         'ans': ans,
         'vsig': init_data['vsig'],
-        'cdata': round((pass_time + random.randint(200, 400)) / 10),
+        'cdata': cdata,
         'websig': init_data['websig'],
         'subcapclass': init_data['subcapclass'],
         init_data['collectdata']: collect_data,
@@ -324,12 +324,12 @@ def crack(aid, referer):
     print('缺口距离', distance)
     # 伪造轨迹
     trace = generate_trace(distance)
-    # 轨迹还需要加上最后一条 js 生成的, 不知道具体什么意思
-    trace.append([0, 0, u_challenge(cap_challenge)])
+    cdata = u_challenge(cap_challenge)
+    trace.append([0, 0, cdata])
     # 停顿一秒
     time.sleep(1)
     # 最终校验
-    result = _slider_verify(start_time, ans, trace, page_session, init_data, fpsig, eks, referer)
+    result = _slider_verify(start_time, ans, trace, page_session, init_data, fpsig, eks, cdata, referer)
     print('校验结果: ', result)
     return result
 
